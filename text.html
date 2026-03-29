@@ -246,6 +246,11 @@
       searchOverlay.classList.add('is-open');
       searchInput.focus();
     });
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && searchInput.value.trim()) {
+        window.location.href = 'search.html?q=' + encodeURIComponent(searchInput.value.trim());
+      }
+    });
     searchClose.addEventListener('click', () => {
       searchOverlay.classList.remove('is-open');
     });

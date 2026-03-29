@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script>document.documentElement.classList.add('fonts-loading');</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>검색 — 양자리출판사</title>
+  <link rel="stylesheet" href="common.css">
+  <style>
+    .result-section { padding: 0 4mm 40px 4mm; border-bottom: 1px solid var(--rule); }
+    .result-section-label { font-size: 18px; line-height: 1.15; padding: 4mm 0 4mm 0; }
+    .result-empty { font-size: 15px; color: var(--text); display: none; padding-left: 4mm; }
+    @media (max-width: 820px) { .result-empty { text-align: left; } }
+
+    /* 공통 카드 — 썸네일 + 텍스트 1열 */
+    .result-list { display: flex; flex-direction: column; }
+    .result-item {
+      display: flex; align-items: center; gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--rule);
+      text-decoration: none; color: inherit;
+    }
+    .result-item:last-child { border-bottom: none; }
+    .result-item:hover .result-item-title { opacity: 0.6; }
+
+    .result-thumb {
+      width: 72px; height: 48px;
+      flex-shrink: 0;
+      background: #d0cfc9;
+      overflow: hidden;
+    }
+    .result-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .result-thumb--book {
+      width: 36px; height: 54px;
+    }
+
+    .result-item-info { display: flex; flex-direction: column; gap: 3px; }
+    .result-item-title { font-size: 18px; line-height: 1.4; }
+    .result-item-meta { font-size: 14px; color: var(--rule); }
+
+    .results-wrap { display: none; }
+  </style>
+</head>
+<body>
+
+  <header class="header" style="position: relative;">
+    <div class="logo"><a href="index.html">양자리출판사</a></div>
+    <nav class="nav" aria-label="주요 메뉴">
+      <a href="catalog.html">카탈로그</a><span class="spacer">　　</span>
+      <a href="text.html">텍스트</a><span class="spacer">　　</span>
+      <a href="journal.html">저널</a><span class="spacer">　　</span>
+      <a href="scrap.html">스크랩</a>
+      <span class="nav-icons">
+        <button aria-label="검색" id="search-btn">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><line x1="11.5" y1="11.5" x2="16.5" y2="16.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
+        <button aria-label="메뉴" id="menu-btn">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><line x1="0" y1="1" x2="18" y2="1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="0" y1="7" x2="18" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="0" y1="13" x2="18" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
+      </span>
+    </nav>
+    <div class="header-search-overlay" id="header-search-overlay">
+      <input type="text" placeholder="검색" id="search-input" />
+      <button class="header-search-close" id="search-close">닫기</button>
+    </div>
+  </header>
+
+  <div class="menu-overlay" id="menu-overlay">
+    <div class="menu-overlay-top">
+      <div class="menu-overlay-spacer">&nbsp;</div>
+      <div class="menu-overlay-nav">
+        <span class="menu-overlay-close">
+          <span style="display:inline-flex;width:18px;height:18px;"></span>
+          <button id="menu-close" aria-label="메뉴 닫기">
+            <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><line x1="0" y1="1" x2="18" y2="1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="0" y1="7" x2="18" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="0" y1="13" x2="18" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </button>
+        </span>
+      </div>
+    </div>
+    <div class="menu-overlay-body">
+      <div class="menu-overlay-links">
+        <a href="catalog.html">카탈로그</a>
+        <a href="text.html">텍스트</a>
+        <a href="journal.html">저널</a>
+        <a href="scrap.html">스크랩</a>
+        <span class="menu-overlay-spacer"></span>
+        <a href="#">이메일</a>
+        <a href="#">인스타그램</a>
+        <a href="#">온라인스토어</a>
+        <span class="menu-overlay-spacer"></span>
+        <span>양자리출판사</span>
+        <span style="padding-left:0.65em;">(03127)</span>
+        <span style="padding-left:0.65em;">서울시 종로구</span>
+        <span style="padding-left:0.65em;">대학로 47, 1212</span>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="results-wrap" id="results-wrap">
+
+    <section class="result-section">
+      <div class="result-section-label">카탈로그</div>
+      <div class="result-empty" id="result-catalog-empty">검색 결과가 없습니다.</div>
+      <div class="result-list" id="result-catalog-list"></div>
+    </section>
+
+    <section class="result-section">
+      <div class="result-section-label">텍스트</div>
+      <div class="result-empty" id="result-text-empty">검색 결과가 없습니다.</div>
+      <div class="result-list" id="result-text-list"></div>
+    </section>
+
+    <section class="result-section">
+      <div class="result-section-label">저널</div>
+      <div class="result-empty" id="result-journal-empty">검색 결과가 없습니다.</div>
+      <div class="result-list" id="result-journal-list"></div>
+    </section>
+
+
+  </div>
+
+  <footer class="footer">
+    © 2026, 양자리출판사
+  </footer>
+
+
+  <script src="catalog-data.js"></script>
+  <script src="journal-data.js"></script>
+  <script src="text-data.js"></script>
+
+  <script>
+    function match(str, q) {
+      return (str || '').toLowerCase().includes(q.toLowerCase());
+    }
+
+    function makeItem(href, imgSrc, isBook, title, meta) {
+      const a = document.createElement('a');
+      a.className = 'result-item';
+      a.href = href;
+      const thumbClass = isBook ? 'result-thumb result-thumb--book' : 'result-thumb';
+      a.innerHTML =
+        '<div class="' + thumbClass + '">' +
+          (imgSrc ? '<img src="' + imgSrc + '" alt="" decoding="async" loading="lazy">' : '') +
+        '</div>' +
+        '<div class="result-item-info">' +
+          '<div class="result-item-title">' + title + '</div>' +
+          (meta ? '<div class="result-item-meta">' + meta + '</div>' : '') +
+        '</div>';
+      return a;
+    }
+
+    function runSearch(q) {
+      const wrap = document.getElementById('results-wrap');
+      if (!q) { wrap.style.display = 'none'; return; }
+      wrap.style.display = 'block';
+
+      // 카탈로그
+      const catList = document.getElementById('result-catalog-list');
+      const catEmpty = document.getElementById('result-catalog-empty');
+      catList.innerHTML = '';
+      const catR = CATALOG_POSTS.filter(b => match(b.title, q) || match(b.author, q));
+      if (catR.length) {
+        catEmpty.style.display = 'none';
+        catR.forEach(b => catList.appendChild(makeItem(b.href, b.imgFront, true, b.title, '')));
+      } else {
+        catEmpty.style.display = 'block';
+      }
+
+      // 텍스트
+      const textList = document.getElementById('result-text-list');
+      const textEmpty = document.getElementById('result-text-empty');
+      textList.innerHTML = '';
+      const textR = TEXT_POSTS.filter(p => match(p.title, q) || match(p.desc, q) || match(p.translator, q));
+      if (textR.length) {
+        textEmpty.style.display = 'none';
+        textR.forEach(p => textList.appendChild(makeItem(p.href, p.img, false, p.title, (p.translator ? p.translator + ' · ' : '') + p.date)));
+      } else {
+        textEmpty.style.display = 'block';
+      }
+
+      // 저널
+      const journalList = document.getElementById('result-journal-list');
+      const journalEmpty = document.getElementById('result-journal-empty');
+      journalList.innerHTML = '';
+      const journalR = JOURNAL_POSTS.filter(p => match(p.title, q) || match(p.author, q) || match(p.date, q));
+      if (journalR.length) {
+        journalEmpty.style.display = 'none';
+        journalR.forEach(p => journalList.appendChild(makeItem(p.href, p.img, false, p.title, (p.author ? p.author + ' · ' : '') + p.date)));
+      } else {
+        journalEmpty.style.display = 'block';
+      }
+
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const initQ = params.get('q') || '';
+    if (initQ) runSearch(initQ);
+
+    const searchBtn = document.getElementById('search-btn');
+    const searchClose = document.getElementById('search-close');
+    const searchOverlay = document.getElementById('header-search-overlay');
+    const searchInput = document.getElementById('search-input');
+    searchBtn.addEventListener('click', () => { searchOverlay.classList.add('is-open'); searchInput.focus(); });
+    searchClose.addEventListener('click', () => { searchOverlay.classList.remove('is-open'); });
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && searchInput.value.trim()) {
+        const newQ = searchInput.value.trim();
+        history.replaceState(null, '', '?q=' + encodeURIComponent(newQ));
+        searchOverlay.classList.remove('is-open');
+        runSearch(newQ);
+      }
+    });
+
+    const menuBtn = document.getElementById('menu-btn');
+    const menuClose = document.getElementById('menu-close');
+    const menuOverlay = document.getElementById('menu-overlay');
+    menuBtn.addEventListener('click', () => { document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; menuOverlay.classList.add('is-open'); });
+    menuClose.addEventListener('click', () => { document.documentElement.style.overflow = ''; document.body.style.overflow = ''; menuOverlay.classList.remove('is-open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.documentElement.style.overflow = ''; document.body.style.overflow = ''; menuOverlay.classList.remove('is-open'); } });
+  </script>
+
+  <script>
+    (function () {
+      const html = document.documentElement; let revealed = false;
+      function reveal() { if (revealed) return; revealed = true; html.classList.remove('fonts-loading'); html.classList.add('fonts-ready'); }
+      const t = setTimeout(reveal, 5000);
+      Promise.all([document.fonts.load('400 1em "Eulyoo1945"'), document.fonts.load('400 1em "GothicA1"'), document.fonts.ready])
+        .then(() => { clearTimeout(t); requestAnimationFrame(reveal); }).catch(() => { clearTimeout(t); reveal(); });
+    })();
+  </script>
+
+</body>
+</html>
