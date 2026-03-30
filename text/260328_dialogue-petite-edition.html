@@ -4,10 +4,11 @@
   <script>document.documentElement.classList.add('fonts-loading');</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="파타 모르가나(Éditions Fata Morgana)의 설립자 브뤼노 루아와 작가 베르나르 노엘의 소규모 출판에 관한 대화" />
-  <meta name="x-card-show-author" content="false" />
+  <meta name="description" content="파타 모르가나 출판사(Éditions Fata Morgana)의 설립자 브뤼노 루아와 작가 베르나르 노엘의 대화" />
+  <meta name="x-card-show-author" content="true" />
   <title>소규모 출판에 관한 대화 — 양자리출판사</title>
   <link rel="stylesheet" href="../common.css">
+  <script src="../quotes-data.js"></script>
   <style>
     .post-spacer-label { height: calc(18px * 1.15 + 8mm); }
     .post-wrap { padding: 0 0 60px 0; }
@@ -118,7 +119,7 @@
   </figure>
 
   <div class="post-content">
-      <h1 class="post-title"><span style="color: #6e6e6e;">브뤼노 루아, 베르나르 노엘</span><br>소규모 출판에 관한 대화</h1>
+      <h1 class="post-title"><span>브뤼노 루아, 베르나르 노엘</span><br>소규모 출판에 관한 대화</h1>
       <hr style="border: none; border-top: 1px dashed var(--rule); margin-bottom: 7mm;">
       <dl class="post-meta">
         <dt>번역</dt>
@@ -159,30 +160,17 @@
     © 2026, 양자리출판사
   </footer>
 
-  <script src="../quotes-data.js"></script>
   <script>
-    // 인용문 렌더링 (quotes-data.js)
-    (function () {
-      const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-      document.getElementById('quote-inner').innerHTML =
-        '<span class="quote-line">' + q.line + '</span>' +
-        '<span class="quote-source">' + q.source + '</span>';
-    })();
-  </script>
-
-  <script>
-
+    const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+    document.getElementById('quote-inner').innerHTML =
+      '<span class="quote-line">' + q.line + '</span>' +
+      '<span class="quote-source">' + q.source + '</span>';
     const searchBtn = document.getElementById('search-btn');
     const searchClose = document.getElementById('search-close');
     const searchOverlay = document.getElementById('header-search-overlay');
     const searchInput = document.getElementById('search-input');
     searchBtn.addEventListener('click', () => { searchOverlay.classList.add('is-open'); searchInput.focus(); });
     searchClose.addEventListener('click', () => { searchOverlay.classList.remove('is-open'); });
-    searchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && searchInput.value.trim()) {
-        window.location.href = '../search.html?q=' + encodeURIComponent(searchInput.value.trim());
-      }
-    });
     const menuBtn = document.getElementById('menu-btn');
     const menuClose = document.getElementById('menu-close');
     const menuOverlay = document.getElementById('menu-overlay');

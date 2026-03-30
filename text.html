@@ -223,7 +223,7 @@
           '</div>' +
           '<div class="text-post-meta">' +
             '<div class="text-post-left">' +
-              '<div class="text-post-title">' + post.title + '</div>' +
+              '<div class="text-post-title">' + (post.author ? '<span>' + post.author + '</span><br>' : '') + post.title + '</div>' +
               (post.translator ? '<div class="text-post-date">' + post.translator + '</div>' : '') +
               '<div class="text-post-date">' + post.date + '</div>' +
             '</div>' +
