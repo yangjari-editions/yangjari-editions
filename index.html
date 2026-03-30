@@ -181,7 +181,7 @@
     .text-posts {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      column-gap: 30px;
+      column-gap: 25px;
       row-gap: 60px;
     }
 
@@ -288,7 +288,7 @@
     .scrap-grid {
       display: flex;
       flex-direction: column;
-      gap: 40px;
+      gap: 25px;
       padding: 0 0 40px;
       max-width: 1200px;
       margin: 0 auto;
@@ -299,7 +299,7 @@
       flex-direction: row;
       align-items: flex-start;
       justify-content: center;
-      gap: 20px;
+      gap: 25px;
     }
 
     .scrap-item {
@@ -331,6 +331,7 @@
       .scrap-grid {
         padding-left: 4mm;
         padding-right: 4mm;
+        gap: 10px;
       }
     }
 
@@ -432,10 +433,10 @@
       .quote-inner { grid-column: 1; text-align: left; padding: 18px 18px 18px 4mm; }
       .artaud-indent { padding-left: 4mm; }
       .slide-card { width: calc(100vw - 8mm); }
-      .text-posts { grid-template-columns: 1fr; gap: 40px; }
+      .text-posts { grid-template-columns: 1fr; gap: 25px; }
       .slider-wrap::after { width: 80px; }
       .news-grid { grid-template-columns: 1fr; }
-      .scrap-row { gap: 16px; }
+      
       .scrap-title { font-size: 15px; }
     }
 
@@ -446,7 +447,7 @@
 
     body.is-mobile-landscape .text-posts {
       grid-template-columns: 1fr;
-      gap: 40px;
+      gap: 25px;
     }
 
     body.is-mobile-landscape .text-post,
@@ -833,6 +834,7 @@
         rowEl.className = 'scrap-row';
         rowEl.style.width = '80%';
         rowEl.style.margin = '0 auto';
+        if (items[i] && items[i].gap) rowEl.style.gap = items[i].gap + 'px';
         [items[i], items[i + 1]].forEach(function (item) {
           if (!item) return;
           var itemEl = document.createElement('div');

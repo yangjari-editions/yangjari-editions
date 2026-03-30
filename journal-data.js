@@ -4,9 +4,9 @@
 const JOURNAL_POSTS = [
   {
     href:   "journal/260328_day.html",
-    img:    "images/journal/260328_day/text_pg_05.webp",
-    title:  "매일매일",
-    author: "말립",
+    img:    "images/news/260328_day/text_pg_05.webp",
+    title:  "이옥준: 하루",
+    author: "",
     date:   "2026년 3월 28일"
   }
 ];

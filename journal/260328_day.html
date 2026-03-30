@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="" />
-  <title>매일매일</title>
+  <title>이옥준: 하루</title>
   <link rel="stylesheet" href="../common.css">
   <style>
 
@@ -152,15 +152,15 @@
 
     <div class="day-slide-area" id="day-slide-area">
       <a class="day-back" href="../journal.html">←</a>
-      <div class="day-counter" id="day-counter">1 / 4</div>
+      <div class="day-counter" id="day-counter">1 / ${slides.length}</div>
 
       <div class="day-slide" data-caption="파리, 2024년 봄">
         <img src="../images/journal/260328_day/text_pg_03.webp" alt="" decoding="async" />
       </div>
 
-      <div class="day-slide day-slide--text">
+      <div class="day-slide day-slide--text" data-caption="그게 맞는건지는 모르겠지만">
         <div class="day-text-inner">
-          <div class="day-text-body" style="font-size:32px">'저는 이 책의 실용적인 디자인과 정보를 얻는 도구로서의 기능이 마음에 듭니다.'</div>
+          <div class="day-text-body" style="font-size:24px">'저는 이 책의 실용적인 디자인과 정보를 얻는 도구로서의 기능이 마음에 듭니다.'</div>
         </div>
       </div>
 
@@ -168,9 +168,9 @@
         <img src="../images/journal/260328_day/20250806_05.webp" alt="" decoding="async" />
       </div>
 
-      <div class="day-slide day-slide--text">
+      <div class="day-slide day-slide--text" data-caption="그게 맞는건지는 모르겠지만">
         <div class="day-text-inner">
-          <div class="day-text-body" style="font-size:32px">'책장을 넘기다보면 끊임없이 새로운 것을 발견하게 된다.'</div>
+          <div class="day-text-body" style="font-size:24px">'책장을 넘기다보면 끊임없이 새로운 것을 발견하게 된다.'</div>
         </div>
       </div>
     </div>
@@ -229,11 +229,6 @@
     const searchInput   = document.getElementById('search-input');
     searchBtn.addEventListener('click', () => { searchOverlay.classList.add('is-open'); searchInput.focus(); });
     searchClose.addEventListener('click', () => { searchOverlay.classList.remove('is-open'); });
-    searchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && searchInput.value.trim()) {
-        window.location.href = '../search.html?q=' + encodeURIComponent(searchInput.value.trim());
-      }
-    });
 
     const menuBtn     = document.getElementById('menu-btn');
     const menuClose   = document.getElementById('menu-close');

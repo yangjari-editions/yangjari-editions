@@ -22,7 +22,7 @@
     .scrap-grid {
       display: flex;
       flex-direction: column;
-      gap: 40px;
+      gap: 25px;
       max-width: 1200px;
       margin: 0 auto;
     }
@@ -32,7 +32,7 @@
       flex-direction: row;
       align-items: flex-start;
       justify-content: center;
-      gap: 20px;
+      gap: 25px;
     }
 
     .scrap-item {
@@ -81,7 +81,7 @@
 
     @media (max-width: 820px) {
       .scrap-row { width: 100% !important; }
-      .scrap-grid { padding-left: 4mm; padding-right: 4mm; }
+      .scrap-grid { padding-left: 4mm; padding-right: 4mm; gap: 10px; }
       .scrap-title { font-size: 15px; }
     }
   </style>
@@ -203,6 +203,7 @@
           rowEl.className = 'scrap-row';
           rowEl.style.width = '80%';
           rowEl.style.margin = '0 auto';
+          if (items[i] && items[i].gap) rowEl.style.gap = items[i].gap + 'px';
           [items[i], items[i + 1]].forEach(function (item) {
             if (!item) return;
             var itemEl = document.createElement('div');
