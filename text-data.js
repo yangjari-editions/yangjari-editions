@@ -14,7 +14,7 @@ const TEXT_POSTS = [
     img:        "images/text/260328_dialogue-petite-edition/text_03_main_under100kb.webp",
     alt:        "— 소규모 출판에 관한 대화",
     title:      "— 소규모 출판에 관한 대화",
-    author:     "브뤼노 루아, 베르나르 노엘",
+    author:     "브뤼노 루아",
     translator: "이옥준 번역",
     date:       "2026년 3월 28일",
     desc:       "파타 모르가나 출판사(Éditions Fata Morgana)의 설립자 브뤼노 루아와 작가 베르나르 노엘의 대화"
