@@ -778,26 +778,16 @@
     // 카탈로그 렌더링 (catalog-data.js)
     (function () {
       const track = document.getElementById('catalog-track');
-      CATALOG_POSTS.forEach(function (book, i) {
-        const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-        const cardId = 'catalog-card-' + i;
+      CATALOG_POSTS.forEach(function (book) {
         const card = document.createElement('div');
         card.className = 'catalog-card';
-        card.id = cardId;
         card.innerHTML =
-          '<a href="' + book.href + '" class="catalog-book-link" id="catalog-book-link-' + i + '">' +
+          '<a href="' + book.href + '" class="catalog-book-link">' +
             '<div class="catalog-book">' +
               '<div class="catalog-book-front" style="background-image:url(\'' + book.imgFront + '\');background-size:cover;background-position:center;"></div>' +
-              (book.imgBack ? '<div class="catalog-book-back" style="background-image:url(\'' + book.imgBack + '\');background-size:cover;background-position:center;opacity:0;"></div>' : '') +
             '</div>' +
           '</a>' +
           '<a href="' + book.href + '" class="catalog-title">' + book.title + '</a>';
-        if (!supportsHover) {
-          card.querySelector('.catalog-book-link').addEventListener('click', function (e) {
-            e.preventDefault();
-            card.classList.toggle('is-flipped');
-          });
-        }
         track.appendChild(card);
       });
     })();
