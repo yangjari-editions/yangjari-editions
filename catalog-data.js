@@ -9,7 +9,7 @@ const CATALOG_POSTS = [
   {
     href:     "catalog/c_001_artaud.html",
     imgFront: "images/catalog/catalogue_artaud_001.webp",
-    imgBack:  "images/catalog/catalogue_artaud_002.webp",
+    imgBack:  null,
     title:    "앙토냉 아르토<br>자크 리비에르와의 서신"
   }
 ];
