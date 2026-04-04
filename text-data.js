@@ -10,6 +10,16 @@
 
 const TEXT_POSTS = [
   {
+    href:       "text/260328_dialogue-petite-edition.html",
+    img:        "images/text/260328_dialogue-petite-edition/text_03_main_under100kb.webp",
+    alt:        "— 소규모 출판에 관한 대화",
+    title:      "— 소규모 출판에 관한 대화",
+    author:     "브뤼노 루아",
+    translator: "이옥준 번역",
+    date:       "2026년 3월 28일",
+    desc:       "파타 모르가나 출판사(Éditions Fata Morgana)의 설립자 브뤼노 루아와 작가 베르나르 노엘의 대화"
+  },
+  {
     href:       "text/260315_huysmans-interview.html",
     img:        "images/text/260315_huysmans-interview/text_02_main.webp",
     alt:        "— 인터뷰",
@@ -20,13 +30,13 @@ const TEXT_POSTS = [
     desc:       "『오늘의 사람들(Les hommes d'aujourd'hui)』, N°263, 1886년"
   },
   {
-    href:       "text/260328_dialogue-petite-edition.html",
-    img:        "images/text/260328_dialogue-petite-edition/text_03_main_under100kb.webp",
-    alt:        "— 소규모 출판에 관한 대화",
-    title:      "— 소규모 출판에 관한 대화",
-    author:     "브뤼노 루아",
+    href:       "text/260404_flaubert_lc.html",
+    img:        "images/text/260404_flaubert_lc/1852_12_19_gf_cole_01.max-1920x1080.webp",
+    alt:        "— 루이즈 콜레에게 보내는 편지",
+    title:      "— 루이즈 콜레에게 보내는 편지",
+    author:     "귀스타브 플로베르",
     translator: "이옥준 번역",
-    date:       "2026년 3월 28일",
-    desc:       "파타 모르가나 출판사(Éditions Fata Morgana)의 설립자 브뤼노 루아와 작가 베르나르 노엘의 대화"
+    date:       "2026년 4월 4일",
+    desc:       "루이즈 콜레에게 보내는 귀스타브 플로베르의 편지"
   }
 ];

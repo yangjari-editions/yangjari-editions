@@ -182,7 +182,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: 25px;
-      row-gap: 60px;
+      row-gap: 40px;
     }
 
     .text-post {
@@ -526,7 +526,7 @@
         <span style="padding-left:0.65em;">서울시 종로구</span>
         <span style="padding-left:0.65em;">대학로 47, 1212</span>
         <span class="menu-overlay-spacer"></span>
-        <a href="mailto:mail@yangjari-editions.com">메일</a>
+        <a href="/cdn-cgi/l/email-protection#d7bab6bebb97aeb6b9b0bdb6a5befab2b3bea3beb8b9a4f9b4b8ba">메일</a>
         <a href="https://instagram.com/yangjari_editions" target="_blank">인스타그램</a>
       </div>
     </div>
@@ -539,7 +539,7 @@
   </section>
 
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     (function () {
       const html = document.documentElement;
       let revealed = false;
@@ -874,10 +874,14 @@
     setTimeout(applyTextLayoutFix, 60);
     setTimeout(applyTextLayoutFix, 180);
   }, { passive: true });
-  if (mq.addEventListener) mq.addEventListener('change', applyTextLayoutFix);
-  else if (mq.addListener) mq.addListener(applyTextLayoutFix);
+  if (mq.addEventListener) {
+    mq.addEventListener('change', applyTextLayoutFix);
+  } else {
+    mq.addListener(applyTextLayoutFix);
+  }
+  applyTextLayoutFix();
 })();
-</script>
+  </script>
 
 </body>
 </html>
