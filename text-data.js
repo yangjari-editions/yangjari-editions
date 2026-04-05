@@ -37,7 +37,7 @@ const TEXT_POSTS = [
     author:     "조리스카를 위스망스",
     translator: "이옥준 번역",
     date:       "2026년 3월 15일",
-    desc:       "『오늘의 사람들(Les hommes d'aujourd'hui)』, N°263, 1886년"
+    desc:       "인터뷰, 『오늘의 사람들(Les hommes d'aujourd'hui)』, N°263, 1886년"
   },
   {
     href:       "text/260404_flaubert_lc.html",

@@ -39,6 +39,32 @@
     .result-item-meta { font-size: 14px; color: var(--rule); }
 
     .results-wrap { display: none; }
+    /* ── 뉴스레터 ── */
+    .menu-newsletter-wrap { display: flex; flex-direction: column; }
+    .menu-newsletter-btn {
+      background: none; border: none; cursor: pointer;
+      font-family: var(--ui-font); font-size: 18px;
+      color: var(--text); text-align: left; padding: 0;
+      line-height: 1.75; letter-spacing: -0.01em;
+    }
+    .menu-newsletter-btn:hover { opacity: 0.5; }
+    .menu-newsletter-form { display: flex; flex-direction: column; gap: 0; }
+    .menu-newsletter-input {
+      background: none; border: none;
+      font-family: var(--ui-font); font-size: 18px;
+      color: var(--text); padding: 0; outline: none;
+      letter-spacing: -0.01em; width: 100%;
+      line-height: 1.75; display: block; height: 1.75em;
+    }
+    .menu-newsletter-input::placeholder { color: var(--text); opacity: 0.5; }
+    .menu-newsletter-submit {
+      background: none; border: none; cursor: pointer;
+      font-family: var(--ui-font); font-size: 18px;
+      color: var(--text); text-align: left; padding: 0;
+      line-height: 1.75; letter-spacing: -0.01em;
+    }
+    .menu-newsletter-submit:hover { opacity: 0.5; }
+    .menu-newsletter-done { font-size: 18px; line-height: 1.75; color: var(--text); }
   </style>
 </head>
 <body>
@@ -89,8 +115,17 @@
         <span style="padding-left:0.65em;">서울시 종로구</span>
         <span style="padding-left:0.65em;">대학로 47, 1212</span>
         <span class="menu-overlay-spacer"></span>
-        <a href="/cdn-cgi/l/email-protection#1974787075596078777e73786b70347c7d706d7076776a377a7674">메일</a>
+        <a href="mailto:mail@yangjari-editions.com">메일</a>
         <a href="https://instagram.com/yangjari_editions" target="_blank">인스타그램</a>
+        <span class="menu-newsletter-wrap" id="menu-newsletter-wrap">
+          <button class="menu-newsletter-btn" id="menu-newsletter-btn" onclick="openNewsletter()">뉴스레터</button>
+          <div class="menu-newsletter-form" id="menu-newsletter-form" style="display:none;">
+            <input class="menu-newsletter-input" id="newsletter-name" type="text" placeholder="이름" autocomplete="off" />
+            <input class="menu-newsletter-input" id="newsletter-email" type="email" placeholder="이메일" autocomplete="off" />
+            <button class="menu-newsletter-submit" id="newsletter-submit" onclick="submitNewsletter()">확인</button>
+          </div>
+          <span class="menu-newsletter-done" id="newsletter-done" style="display:none;">완료</span>
+        </span>
       </div>
     </div>
   </div>
@@ -230,5 +265,34 @@
     })();
   </script>
 
+  <script>
+    const NEWSLETTER_URL = 'https://script.google.com/a/macros/yangjari-editions.com/s/AKfycbye3PjtFxT5sqjFrRoWQkpYe0nVOg1dDmFZ_YD1Q7uH6bdsnCPsmkDwTZ6nMQVRkJRIyQ/exec';
+    function openNewsletter() {
+      document.getElementById('menu-newsletter-btn').style.display = 'none';
+      document.getElementById('menu-newsletter-form').style.display = 'flex';
+      document.getElementById('newsletter-name').focus();
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        const nameEl = document.getElementById('newsletter-name');
+        const emailEl = document.getElementById('newsletter-email');
+        if (document.activeElement === nameEl) { emailEl.focus(); e.preventDefault(); }
+        else if (document.activeElement === emailEl) { submitNewsletter(); e.preventDefault(); }
+      }
+    });
+    async function submitNewsletter() {
+      const name = document.getElementById('newsletter-name').value.trim();
+      const email = document.getElementById('newsletter-email').value.trim();
+      if (!name || !email) return;
+      const submitBtn = document.getElementById('newsletter-submit');
+      submitBtn.textContent = '전송 중...';
+      submitBtn.style.pointerEvents = 'none';
+      fetch(NEWSLETTER_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ name, email }) }).catch(() => {});
+      setTimeout(() => {
+        document.getElementById('menu-newsletter-form').style.display = 'none';
+        document.getElementById('newsletter-done').style.display = 'block';
+      }, 1000);
+    }
+  </script>
 </body>
 </html>
