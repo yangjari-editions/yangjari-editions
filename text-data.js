@@ -10,8 +10,18 @@
 
 const TEXT_POSTS = [
   {
+    href:       "text/260320_gb_01.html",
+    img:        "images/text/260320_gb_01/17227368886.jpg",
+    alt:        "— 서문",
+    title:      "— 서문",
+    author:     "쥘 바르베 도르비이",
+    translator: "이옥준 번역",
+    date:       "2026년 4월 5일",
+    desc:       "『댄디즘과 조지 브러멀(Du Dandysme et de Georges Brummell)』의 제2판 서문"
+  },
+  {
     href:       "text/260328_dialogue-petite-edition.html",
-    img:        "images/text/260328_dialogue-petite-edition/text_03_main_under100kb.webp",
+    img:        "images/text/260328_dialogue-petite-edition/text_03_01_main.webp",
     alt:        "— 소규모 출판에 관한 대화",
     title:      "— 소규모 출판에 관한 대화",
     author:     "브뤼노 루아",
@@ -26,14 +36,14 @@ const TEXT_POSTS = [
     title:      "— 인터뷰",
     author:     "조리스카를 위스망스",
     translator: "이옥준 번역",
-    date:       "2026년 4월 4일",
+    date:       "2026년 3월 15일",
     desc:       "『오늘의 사람들(Les hommes d'aujourd'hui)』, N°263, 1886년"
   },
   {
     href:       "text/260404_flaubert_lc.html",
-    img:        "images/text/260404_flaubert_lc/1852_12_19_gf_cole_01.max-1920x1080.webp",
-    alt:        "— 루이즈 콜레에게 보내는 편지",
-    title:      "— 루이즈 콜레에게 보내는 편지",
+    img:        "images/text/260404_flaubert_lc/text_04_main_0.webp",
+    alt:        "— 편지",
+    title:      "— 편지",
     author:     "귀스타브 플로베르",
     translator: "이옥준 번역",
     date:       "2026년 4월 4일",
