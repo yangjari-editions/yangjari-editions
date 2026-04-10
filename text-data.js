@@ -11,7 +11,7 @@
 const TEXT_POSTS = [
   {
     href:       "/text/gb_01/",
-    img:        "images/text/260320_gb_01/17227368886.jpg",
+    img:        "images/text/gb_01/17227368886.jpg",
     alt:        "— 서문",
     title:      "— 서문",
     author:     "쥘 바르베 도르비이",
@@ -21,7 +21,7 @@ const TEXT_POSTS = [
   },
   {
     href:       "/text/dialogue-petite-edition/",
-    img:        "images/text/260328_dialogue-petite-edition/text_03_01_main.webp",
+    img:        "images/text/dialogue-petite-edition/text_03_01_main.webp",
     alt:        "— 소규모 출판에 관한 대화",
     title:      "— 소규모 출판에 관한 대화",
     author:     "브뤼노 루아",
@@ -31,7 +31,7 @@ const TEXT_POSTS = [
   },
   {
     href:       "/text/huysmans-interview/",
-    img:        "images/text/260315_huysmans-interview/text_02_main.webp",
+    img:        "images/text/huysmans-interview/text_02_main.webp",
     alt:        "— 인터뷰",
     title:      "— 인터뷰",
     author:     "조리스카를 위스망스",
@@ -41,12 +41,12 @@ const TEXT_POSTS = [
   },
   {
     href:       "/text/flaubert_lc/",
-    img:        "images/text/260404_flaubert_lc/text_04_main_0.webp",
+    img:        "images/text/flaubert_lc/text_04_main_0.webp",
     alt:        "— 편지",
     title:      "— 편지",
     author:     "귀스타브 플로베르",
     translator: "표은선 번역",
-    date:       "2026년 4월 4일",
+    date:       "2026년 3월 1일",
     desc:       "루이즈 콜레에게 보내는 귀스타브 플로베르의 편지"
   }
 ];

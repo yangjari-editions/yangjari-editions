@@ -70,6 +70,16 @@ html, body {
 html.fonts-loading body { visibility: hidden; }
 html.fonts-ready body { visibility: visible; }
 
+::selection {
+  background: #EED347;
+  color: #111111;
+}
+
+::-moz-selection {
+  background: #EED347;
+  color: #111111;
+}
+
 /* ── 메뉴 오버레이 ── */
 .menu-overlay {
   touch-action: pan-y;
