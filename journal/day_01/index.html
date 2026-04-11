@@ -177,7 +177,7 @@
       <a class="day-back" href="../journal/">←</a>
       <div class="day-counter" id="day-counter">1 / ${slides.length}</div>
 
-      <div class="day-slide day-slide--text" data-caption="누가 말한 건지는 모르겠지만">
+      <div class="day-slide day-slide--text" data-caption="(누가 말한 건지는 기억이 안 나지만)">
         <div class="day-text-inner">
           <div class="day-text-body" style="font-size:20px">질문: 당신은 무엇을 만들어냈다고 말하고 싶으신가요?<br>답변: 절대 아닙니다! 하찮은 일이죠!</div>
         </div>
@@ -185,6 +185,26 @@
 
       <div class="day-slide" data-caption="소공동, 2011년 겨울">
         <img src="../images/news/day_01/RIMG0085.webp" alt="" decoding="async" />
+      </div>
+
+      <div class="day-slide day-slide--text" data-caption="이 말을 문학 사조의 의미로 받아들여서는 안 됩니다. ">
+        <div class="day-text-inner">
+          <div class="day-text-body" style="font-size:20px">질문: 낭만주의자가 아닌 사람이 있을까요? <br></div>
+        </div>
+      </div>
+
+      <div class="day-slide" data-caption="을지로 3가, 2016년 겨울">
+        <img src="../images/news/day_01/IMG_4983 .webp" alt="" decoding="async" />
+      </div>
+
+      <div class="day-slide day-slide--text" data-caption="그런데 그런 일은 매우 드물어요.">
+        <div class="day-text-inner">
+          <div class="day-text-body" style="font-size:20px">답변: 당신의 본능에 가까운 무언가를 만들었다면 당신은 성공한 것입니다.</div>
+        </div>
+      </div>
+
+      <div class="day-slide" data-caption="Innstraße 26, 2018년 겨울">
+        <img src="../images/news/day_01/IMG_4550.webp" alt="" decoding="async" />
       </div>
     </div>
 
@@ -274,46 +294,17 @@
       const menuBtn = document.getElementById('menu-btn');
       const menuClose = document.getElementById('menu-close');
       const menuOverlay = document.getElementById('menu-overlay');
-
-      function closeSearch() {
-        if (!searchOverlay || !searchInput) return;
-        searchOverlay.classList.remove('is-open');
-        searchInput.value = '';
-      }
-
-      function closeMenu() {
-        html.style.overflow = '';
-        body.style.overflow = '';
-        if (menuOverlay) menuOverlay.classList.remove('is-open');
-      }
-
+      function closeSearch() { if (!searchOverlay || !searchInput) return; searchOverlay.classList.remove('is-open'); searchInput.value = ''; }
+      function closeMenu() { html.style.overflow = ''; body.style.overflow = ''; if (menuOverlay) menuOverlay.classList.remove('is-open'); }
       if (searchBtn && searchOverlay && searchInput) {
-        searchBtn.addEventListener('click', function () {
-          searchOverlay.classList.add('is-open');
-          searchInput.focus();
-        });
-        searchInput.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter' && searchInput.value.trim()) {
-            window.location.href = '/search/?q=' + encodeURIComponent(searchInput.value.trim());
-          }
-        });
+        searchBtn.addEventListener('click', function () { searchOverlay.classList.add('is-open'); searchInput.focus(); });
+        searchInput.addEventListener('keydown', function (e) { if (e.key === 'Enter' && searchInput.value.trim()) window.location.href = '/search/?q=' + encodeURIComponent(searchInput.value.trim()); });
       }
       if (searchClose) searchClose.addEventListener('click', closeSearch);
-
-      if (menuBtn && menuOverlay) {
-        menuBtn.addEventListener('click', function () {
-          html.style.overflow = 'hidden';
-          body.style.overflow = 'hidden';
-          menuOverlay.classList.add('is-open');
-        });
-      }
+      if (menuBtn && menuOverlay) menuBtn.addEventListener('click', function () { html.style.overflow = 'hidden'; body.style.overflow = 'hidden'; menuOverlay.classList.add('is-open'); });
       if (menuClose) menuClose.addEventListener('click', closeMenu);
-
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-          closeSearch();
-          closeMenu();
-        }
+        if (e.key === 'Escape') { closeSearch(); closeMenu(); }
         if (e.key === 'Enter') {
           const nameEl = document.getElementById('newsletter-name');
           const emailEl = document.getElementById('newsletter-email');
@@ -321,7 +312,6 @@
           else if (document.activeElement === emailEl) { window.submitNewsletter(); e.preventDefault(); }
         }
       });
-
       window.openNewsletter = function () {
         const btn = document.getElementById('menu-newsletter-btn');
         const form = document.getElementById('menu-newsletter-form');
@@ -330,7 +320,6 @@
         if (form) form.style.display = 'flex';
         if (name) name.focus();
       };
-
       window.submitNewsletter = function () {
         const nameEl = document.getElementById('newsletter-name');
         const emailEl = document.getElementById('newsletter-email');
@@ -342,15 +331,8 @@
         if (!name || !email || !submitBtn) return;
         submitBtn.textContent = '전송 중...';
         submitBtn.style.pointerEvents = 'none';
-        fetch(NEWSLETTER_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: JSON.stringify({ name, email }),
-        }).catch(function () {});
-        setTimeout(function () {
-          if (form) form.style.display = 'none';
-          if (done) done.style.display = 'block';
-        }, 1000);
+        fetch(NEWSLETTER_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ name, email }) }).catch(function () {});
+        setTimeout(function () { if (form) form.style.display = 'none'; if (done) done.style.display = 'block'; }, 1000);
       };
     })();
   </script>
