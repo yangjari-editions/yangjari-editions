@@ -146,10 +146,10 @@
   <header class="header" style="position: relative;">
     <div class="logo"><a href="/">양자리출판사</a></div>
     <nav class="nav" aria-label="주요 메뉴">
-      <a href="catalog/">카탈로그</a><span class="spacer">　　</span>
-      <a href="text/" class="active">텍스트</a><span class="spacer">　　</span>
-      <a href="journal/">저널</a><span class="spacer">　　</span>
-      <a href="scrap/">스크랩</a>
+      <a href="/catalog/">카탈로그</a><span class="spacer">　　</span>
+      <a href="/text/" class="active">텍스트</a><span class="spacer">　　</span>
+      <a href="/journal/">저널</a><span class="spacer">　　</span>
+      <a href="/scrap/">스크랩</a>
       <span class="nav-icons">
         <button aria-label="검색" id="search-btn">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -191,17 +191,17 @@
     </div>
     <div class="menu-overlay-body">
       <div class="menu-overlay-links">
-        <a href="catalog/">카탈로그</a>
-        <a href="text/">텍스트</a>
-        <a href="journal/">저널</a>
-        <a href="scrap/">스크랩</a>
+        <a href="/catalog/">카탈로그</a>
+        <a href="/text/">텍스트</a>
+        <a href="/journal/">저널</a>
+        <a href="/scrap/">스크랩</a>
         <span class="menu-overlay-spacer"></span>
         <span>양자리출판사</span>
         <span style="padding-left:0.65em;">(03127)</span>
         <span style="padding-left:0.65em;">서울시 종로구</span>
         <span style="padding-left:0.65em;">대학로 47, 1212</span>
         <span class="menu-overlay-spacer"></span>
-        <a href="/cdn-cgi/l/email-protection#d9b4b8b0b599a0b8b7beb3b8abb0f4bcbdb0adb0b6b7aaf7bab6b4">메일</a>
+        <a href="mailto:mail@yangjari-editions.com">메일</a>
         <a href="https://instagram.com/yangjari_editions" target="_blank">인스타그램</a>
         <span class="menu-newsletter-wrap" id="menu-newsletter-wrap">
           <button class="menu-newsletter-btn" id="menu-newsletter-btn" onclick="openNewsletter()">뉴스레터</button>
@@ -385,34 +385,98 @@
     })();
   </script>
 
-  <script>
-    const NEWSLETTER_URL = 'https://script.google.com/a/macros/yangjari-editions.com/s/AKfycbye3PjtFxT5sqjFrRoWQkpYe0nVOg1dDmFZ_YD1Q7uH6bdsnCPsmkDwTZ6nMQVRkJRIyQ/exec';
-    function openNewsletter() {
-      document.getElementById('menu-newsletter-btn').style.display = 'none';
-      document.getElementById('menu-newsletter-form').style.display = 'flex';
-      document.getElementById('newsletter-name').focus();
-    }
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
+
+  <script id="site-menu-script">
+    (function () {
+      const NEWSLETTER_URL = 'https://script.google.com/a/macros/yangjari-editions.com/s/AKfycbye3PjtFxT5sqjFrRoWQkpYe0nVOg1dDmFZ_YD1Q7uH6bdsnCPsmkDwTZ6nMQVRkJRIyQ/exec';
+      const html = document.documentElement;
+      const body = document.body;
+      const searchBtn = document.getElementById('search-btn');
+      const searchOverlay = document.getElementById('header-search-overlay');
+      const searchInput = document.getElementById('search-input');
+      const searchClose = document.getElementById('search-close');
+      const menuBtn = document.getElementById('menu-btn');
+      const menuClose = document.getElementById('menu-close');
+      const menuOverlay = document.getElementById('menu-overlay');
+
+      function closeSearch() {
+        if (!searchOverlay || !searchInput) return;
+        searchOverlay.classList.remove('is-open');
+        searchInput.value = '';
+      }
+
+      function closeMenu() {
+        html.style.overflow = '';
+        body.style.overflow = '';
+        if (menuOverlay) menuOverlay.classList.remove('is-open');
+      }
+
+      if (searchBtn && searchOverlay && searchInput) {
+        searchBtn.addEventListener('click', function () {
+          searchOverlay.classList.add('is-open');
+          searchInput.focus();
+        });
+        searchInput.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' && searchInput.value.trim()) {
+            window.location.href = '/search/?q=' + encodeURIComponent(searchInput.value.trim());
+          }
+        });
+      }
+      if (searchClose) searchClose.addEventListener('click', closeSearch);
+
+      if (menuBtn && menuOverlay) {
+        menuBtn.addEventListener('click', function () {
+          html.style.overflow = 'hidden';
+          body.style.overflow = 'hidden';
+          menuOverlay.classList.add('is-open');
+        });
+      }
+      if (menuClose) menuClose.addEventListener('click', closeMenu);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closeSearch();
+          closeMenu();
+        }
+        if (e.key === 'Enter') {
+          const nameEl = document.getElementById('newsletter-name');
+          const emailEl = document.getElementById('newsletter-email');
+          if (document.activeElement === nameEl) { emailEl.focus(); e.preventDefault(); }
+          else if (document.activeElement === emailEl) { window.submitNewsletter(); e.preventDefault(); }
+        }
+      });
+
+      window.openNewsletter = function () {
+        const btn = document.getElementById('menu-newsletter-btn');
+        const form = document.getElementById('menu-newsletter-form');
+        const name = document.getElementById('newsletter-name');
+        if (btn) btn.style.display = 'none';
+        if (form) form.style.display = 'flex';
+        if (name) name.focus();
+      };
+
+      window.submitNewsletter = function () {
         const nameEl = document.getElementById('newsletter-name');
         const emailEl = document.getElementById('newsletter-email');
-        if (document.activeElement === nameEl) { emailEl.focus(); e.preventDefault(); }
-        else if (document.activeElement === emailEl) { submitNewsletter(); e.preventDefault(); }
-      }
-    });
-    async function submitNewsletter() {
-      const name = document.getElementById('newsletter-name').value.trim();
-      const email = document.getElementById('newsletter-email').value.trim();
-      if (!name || !email) return;
-      const submitBtn = document.getElementById('newsletter-submit');
-      submitBtn.textContent = '전송 중...';
-      submitBtn.style.pointerEvents = 'none';
-      fetch(NEWSLETTER_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ name, email }) }).catch(() => {});
-      setTimeout(() => {
-        document.getElementById('menu-newsletter-form').style.display = 'none';
-        document.getElementById('newsletter-done').style.display = 'block';
-      }, 1000);
-    }
+        const submitBtn = document.getElementById('newsletter-submit');
+        const form = document.getElementById('menu-newsletter-form');
+        const done = document.getElementById('newsletter-done');
+        const name = nameEl ? nameEl.value.trim() : '';
+        const email = emailEl ? emailEl.value.trim() : '';
+        if (!name || !email || !submitBtn) return;
+        submitBtn.textContent = '전송 중...';
+        submitBtn.style.pointerEvents = 'none';
+        fetch(NEWSLETTER_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify({ name, email }),
+        }).catch(function () {});
+        setTimeout(function () {
+          if (form) form.style.display = 'none';
+          if (done) done.style.display = 'block';
+        }, 1000);
+      };
+    })();
   </script>
 </body>
 </html>

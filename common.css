@@ -161,6 +161,32 @@ html.fonts-ready body { visibility: visible; }
   color: var(--text);
 }
 
+.menu-newsletter-wrap { display: flex; flex-direction: column; }
+.menu-newsletter-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--ui-font); font-size: 18px;
+  color: var(--text); text-align: left; padding: 0;
+  line-height: 1.75; letter-spacing: -0.01em;
+}
+.menu-newsletter-btn:hover { opacity: 0.5; }
+.menu-newsletter-form { display: flex; flex-direction: column; gap: 0; }
+.menu-newsletter-input {
+  background: none; border: none;
+  font-family: var(--ui-font); font-size: 18px;
+  color: var(--text); padding: 0; outline: none;
+  letter-spacing: -0.01em; width: 100%;
+  line-height: 1.75; display: block; height: 1.75em;
+}
+.menu-newsletter-input::placeholder { color: var(--text); opacity: 0.5; }
+.menu-newsletter-submit {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--ui-font); font-size: 18px;
+  color: var(--text); text-align: left; padding: 0;
+  line-height: 1.75; letter-spacing: -0.01em;
+}
+.menu-newsletter-submit:hover { opacity: 0.5; }
+.menu-newsletter-done { font-size: 18px; line-height: 1.75; color: var(--text); }
+
 /* ── 헤더 ── */
 .header {
   display: grid;
