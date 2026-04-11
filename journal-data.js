@@ -5,7 +5,7 @@ const JOURNAL_POSTS = [
   {
     href:   "/journal/day_01/",
     img:    "images/news/day_01/text_pg_05.webp",
-    title:  "이옥준: 하루",
+    title:  "침대에서 읽은 책",
     author: "",
     date:   "2026년 3월 28일"
   }
