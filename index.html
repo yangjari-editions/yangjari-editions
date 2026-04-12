@@ -47,6 +47,9 @@
       display: flex;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      overscroll-behavior-y: auto;
+      touch-action: pan-y;
       scrollbar-width: none;
       gap: 18px;
       padding-left: 4mm;
@@ -749,6 +752,7 @@
     let isDragging = false;
     let startX, startScrollLeft;
     let dragMoved = false;
+    let suppressClick = false;
 
     slider.addEventListener('mousedown', (e) => {
       isDragging = true;
@@ -781,12 +785,67 @@
       setTimeout(() => slider.classList.remove('is-dragging'), 0);
     });
 
-    /* 드래그 중이면 링크 클릭 차단 */
+    /* ── 모바일 터치: 가로/세로 제스처 분리 ── */
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartScrollLeft = 0;
+    let touchLock = null;
+    let touchMoved = false;
+
+    slider.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) return;
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+      touchStartScrollLeft = slider.scrollLeft;
+      touchLock = null;
+      touchMoved = false;
+    }, { passive: true });
+
+    slider.addEventListener('touchmove', (e) => {
+      if (e.touches.length !== 1) return;
+      const t = e.touches[0];
+      const dx = t.clientX - touchStartX;
+      const dy = t.clientY - touchStartY;
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      if (!touchLock && Math.max(absX, absY) > 8) {
+        touchLock = absX > absY * 1.15 ? 'horizontal' : 'vertical';
+      }
+
+      if (touchLock === 'horizontal') {
+        e.preventDefault();
+        touchMoved = true;
+        dragMoved = true;
+        slider.classList.add('is-dragging');
+        slider.scrollLeft = touchStartScrollLeft - dx;
+      } else if (touchLock === 'vertical') {
+        touchMoved = true;
+        suppressClick = true;
+      }
+    }, { passive: false });
+
+    function endTouchScroll() {
+      if (touchMoved) {
+        suppressClick = true;
+        window.setTimeout(() => { suppressClick = false; }, 300);
+      }
+      touchLock = null;
+      touchMoved = false;
+      setTimeout(() => slider.classList.remove('is-dragging'), 0);
+    }
+
+    slider.addEventListener('touchend', endTouchScroll, { passive: true });
+    slider.addEventListener('touchcancel', endTouchScroll, { passive: true });
+
+    /* 드래그/스크롤 중이면 링크 클릭 차단 */
     slider.addEventListener('click', (e) => {
-      if (dragMoved) {
+      if (dragMoved || suppressClick) {
         e.preventDefault();
         e.stopPropagation();
         dragMoved = false;
+        suppressClick = false;
       }
     }, true);
 
