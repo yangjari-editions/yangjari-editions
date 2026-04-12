@@ -277,50 +277,6 @@
   </script>
 
   <script>
-
-
-    const searchBtn = document.getElementById('search-btn');
-    const searchClose = document.getElementById('search-close');
-    const searchOverlay = document.getElementById('header-search-overlay');
-    const searchInput = document.getElementById('search-input');
-    searchBtn.addEventListener('click', () => { searchOverlay.classList.add('is-open'); searchInput.focus(); });
-    searchClose.addEventListener('click', () => { searchOverlay.classList.remove('is-open'); });
-    searchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && searchInput.value.trim()) {
-        window.location.href = '/search/?q=' + encodeURIComponent(searchInput.value.trim());
-      }
-    });
-
-    const menuBtn = document.getElementById('menu-btn');
-    const menuClose = document.getElementById('menu-close');
-    const menuOverlay = document.getElementById('menu-overlay');
-    menuBtn.addEventListener('click', () => {
-      
-      
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-      menuOverlay.classList.add('is-open');
-    });
-    menuClose.addEventListener('click', () => {
-      
-      
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      menuOverlay.classList.remove('is-open');
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        
-        
-        document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      menuOverlay.classList.remove('is-open');
-      }
-    });
-
-  </script>
-
-  <script>
     (function () {
       const html = document.documentElement;
       let revealed = false;

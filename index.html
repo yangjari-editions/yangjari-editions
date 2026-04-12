@@ -961,42 +961,29 @@
 (function(){
   const mq = window.matchMedia('(max-width: 960px) and (orientation: landscape)');
 
-  function applyTextLayoutFix(options){
-    const forceReflow = options && options.forceReflow;
-    const isLandscapeMobile = mq.matches;
-    document.body.classList.toggle('is-mobile-landscape', isLandscapeMobile);
-
-    // Keep horizontal overflow cleanup, but do not touch vertical scroll position.
+  function applyTextLayoutFix(){
+    document.body.classList.toggle('is-mobile-landscape', mq.matches);
+    // Clear accidental horizontal offset only; never force vertical scroll or reflow during mobile scroll.
     document.documentElement.scrollLeft = 0;
     document.body.scrollLeft = 0;
-
-    if (!forceReflow || !isLandscapeMobile) return;
-    const posts = document.querySelector('.text-posts');
-    if (!posts) return;
-    posts.style.display = 'none';
-    void posts.offsetHeight;
-    posts.style.display = '';
   }
 
-  function scheduleTextLayoutFix(forceReflow){
-    window.requestAnimationFrame(function(){
-      applyTextLayoutFix({ forceReflow: !!forceReflow });
-    });
+  function scheduleTextLayoutFix(){
+    window.requestAnimationFrame(applyTextLayoutFix);
   }
 
-  window.addEventListener('load', function(){ scheduleTextLayoutFix(false); }, { passive: true });
-  window.addEventListener('pageshow', function(){ scheduleTextLayoutFix(false); }, { passive: true });
+  window.addEventListener('load', scheduleTextLayoutFix, { passive: true });
+  window.addEventListener('pageshow', scheduleTextLayoutFix, { passive: true });
   window.addEventListener('orientationchange', function(){
-    scheduleTextLayoutFix(true);
-    setTimeout(function(){ scheduleTextLayoutFix(true); }, 80);
-    setTimeout(function(){ scheduleTextLayoutFix(true); }, 220);
+    scheduleTextLayoutFix();
+    setTimeout(scheduleTextLayoutFix, 120);
   }, { passive: true });
   if (mq.addEventListener) {
-    mq.addEventListener('change', function(){ scheduleTextLayoutFix(true); });
+    mq.addEventListener('change', scheduleTextLayoutFix);
   } else {
-    mq.addListener(function(){ scheduleTextLayoutFix(true); });
+    mq.addListener(scheduleTextLayoutFix);
   }
-  scheduleTextLayoutFix(false);
+  scheduleTextLayoutFix();
 })();
   </script>
 
