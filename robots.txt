@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://yangjari-editions.com/sitemap.xml
