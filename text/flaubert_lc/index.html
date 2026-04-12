@@ -239,6 +239,23 @@
     })();
   </script>
 
+
+  <script id="footnote-nav-script">
+    (function () {
+      document.querySelectorAll('.post-body sup a[href^="#fn-"], .fn-num-inline a[href^="#fnref-"], .fn-back[href^="#fnref-"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          const hash = link.getAttribute('href');
+          const target = hash ? document.getElementById(hash.slice(1)) : null;
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({ block: 'center' });
+          if (window.history && window.history.pushState) window.history.pushState(null, '', hash);
+          else window.location.hash = hash;
+        });
+      });
+    })();
+  </script>
+
   <script id="site-menu-script">
     (function () {
       const NEWSLETTER_URL = 'https://script.google.com/a/macros/yangjari-editions.com/s/AKfycbye3PjtFxT5sqjFrRoWQkpYe0nVOg1dDmFZ_YD1Q7uH6bdsnCPsmkDwTZ6nMQVRkJRIyQ/exec';
