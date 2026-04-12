@@ -49,7 +49,7 @@
       -webkit-overflow-scrolling: touch;
       overscroll-behavior-x: contain;
       overscroll-behavior-y: auto;
-      touch-action: pan-y;
+      touch-action: pan-y pinch-zoom;
       scrollbar-width: none;
       gap: 18px;
       padding-left: 4mm;
@@ -810,8 +810,9 @@
       const absX = Math.abs(dx);
       const absY = Math.abs(dy);
 
-      if (!touchLock && Math.max(absX, absY) > 8) {
-        touchLock = absX > absY * 1.15 ? 'horizontal' : 'vertical';
+      if (!touchLock && Math.max(absX, absY) > 4) {
+        if (absX > absY * 1.03) touchLock = 'horizontal';
+        else if (absY > absX * 1.2) touchLock = 'vertical';
       }
 
       if (touchLock === 'horizontal') {
