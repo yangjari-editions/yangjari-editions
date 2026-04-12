@@ -942,7 +942,7 @@
           itemEl.className = 'scrap-item';
           itemEl.style.width = item.width;
           itemEl.innerHTML =
-            '<img class="scrap-img" src="' + item.img + '" alt="' + (item.alt||'') + '" loading="lazy">' +
+            '<img class="scrap-img" src="' + item.img + '" alt="' + (item.alt||'') + '">' +
             '<p class="scrap-title">' + (item.title||'') + '</p>';
           itemEl.addEventListener('touchstart', function () { itemEl.classList.add('is-touched'); }, { passive: true });
           itemEl.addEventListener('touchend', function () { itemEl.classList.remove('is-touched'); }, { passive: true });
