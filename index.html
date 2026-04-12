@@ -811,9 +811,9 @@
       const absX = Math.abs(dx);
       const absY = Math.abs(dy);
 
-      if (!touchLock && Math.max(absX, absY) > 4) {
-        if (absX > absY * 1.03) touchLock = 'horizontal';
-        else if (absY > absX * 1.2) touchLock = 'vertical';
+      if (!touchLock && Math.max(absX, absY) > 2) {
+        if (absX > 3 && absX > absY * 0.82) touchLock = 'horizontal';
+        else if (absY > 6 && absY > absX * 1.35) touchLock = 'vertical';
       }
 
       if (touchLock === 'horizontal') {
@@ -831,7 +831,7 @@
     function endTouchScroll() {
       if (touchMoved) {
         suppressClick = true;
-        window.setTimeout(() => { suppressClick = false; }, 300);
+        window.setTimeout(() => { suppressClick = false; }, 220);
       }
       touchLock = null;
       touchMoved = false;
@@ -960,36 +960,43 @@
 <script>
 (function(){
   const mq = window.matchMedia('(max-width: 960px) and (orientation: landscape)');
-  function applyTextLayoutFix(){
+
+  function applyTextLayoutFix(options){
+    const forceReflow = options && options.forceReflow;
     const isLandscapeMobile = mq.matches;
     document.body.classList.toggle('is-mobile-landscape', isLandscapeMobile);
-    // Force a fresh layout pass after rotation and clear any leftover horizontal offset.
-    const posts = document.querySelector('.text-posts');
-    if (posts) {
-      posts.style.display = 'none';
-      void posts.offsetHeight;
-      posts.style.display = '';
-    }
-    if (window.scrollX !== 0) {
-      window.scrollTo(0, window.scrollY || 0);
-    }
+
+    // Keep horizontal overflow cleanup, but do not touch vertical scroll position.
     document.documentElement.scrollLeft = 0;
     document.body.scrollLeft = 0;
+
+    if (!forceReflow || !isLandscapeMobile) return;
+    const posts = document.querySelector('.text-posts');
+    if (!posts) return;
+    posts.style.display = 'none';
+    void posts.offsetHeight;
+    posts.style.display = '';
   }
-  window.addEventListener('load', applyTextLayoutFix, { passive: true });
-  window.addEventListener('pageshow', applyTextLayoutFix, { passive: true });
-  window.addEventListener('resize', applyTextLayoutFix, { passive: true });
+
+  function scheduleTextLayoutFix(forceReflow){
+    window.requestAnimationFrame(function(){
+      applyTextLayoutFix({ forceReflow: !!forceReflow });
+    });
+  }
+
+  window.addEventListener('load', function(){ scheduleTextLayoutFix(false); }, { passive: true });
+  window.addEventListener('pageshow', function(){ scheduleTextLayoutFix(false); }, { passive: true });
   window.addEventListener('orientationchange', function(){
-    applyTextLayoutFix();
-    setTimeout(applyTextLayoutFix, 60);
-    setTimeout(applyTextLayoutFix, 180);
+    scheduleTextLayoutFix(true);
+    setTimeout(function(){ scheduleTextLayoutFix(true); }, 80);
+    setTimeout(function(){ scheduleTextLayoutFix(true); }, 220);
   }, { passive: true });
   if (mq.addEventListener) {
-    mq.addEventListener('change', applyTextLayoutFix);
+    mq.addEventListener('change', function(){ scheduleTextLayoutFix(true); });
   } else {
-    mq.addListener(applyTextLayoutFix);
+    mq.addListener(function(){ scheduleTextLayoutFix(true); });
   }
-  applyTextLayoutFix();
+  scheduleTextLayoutFix(false);
 })();
   </script>
 

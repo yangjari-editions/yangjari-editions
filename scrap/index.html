@@ -227,7 +227,8 @@
       var currentPage = 1;
       var totalPages = Math.ceil(SCRAP_ITEMS.length / PER_PAGE);
 
-      function renderPage(page) {
+      function renderPage(page, options) {
+        options = options || {};
         currentPage = page;
         grid.innerHTML = '';
         var start = (page - 1) * PER_PAGE;
@@ -254,7 +255,7 @@
           grid.appendChild(rowEl);
         }
         renderPagination();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (options.scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       function renderPagination() {
@@ -265,13 +266,13 @@
             var btn = document.createElement('button');
             btn.className = 'scrap-page-btn' + (p === currentPage ? ' is-active' : '');
             btn.textContent = p;
-            btn.addEventListener('click', function () { renderPage(p); });
+            btn.addEventListener('click', function () { renderPage(p, { scroll: true }); });
             pagination.appendChild(btn);
           })(p);
         }
       }
 
-      renderPage(1);
+      renderPage(1, { scroll: false });
     })();
   </script>
 
