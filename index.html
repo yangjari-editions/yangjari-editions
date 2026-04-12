@@ -461,22 +461,24 @@
       overflow-x: hidden;
     }
 
-    body.is-mobile-landscape .text-posts {
-      grid-template-columns: 1fr;
-      gap: 25px;
-    }
+    @media (max-width: 960px) and (orientation: landscape) {
+      .text-posts {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
 
-    body.is-mobile-landscape .text-post,
-    body.is-mobile-landscape .text-post-meta,
-    body.is-mobile-landscape .text-post-meta > *,
-    body.is-mobile-landscape .text-post-left {
-      min-width: 0;
-    }
+      .text-post,
+      .text-post-meta,
+      .text-post-meta > *,
+      .text-post-left {
+        min-width: 0;
+      }
 
-    body.is-mobile-landscape .text-post-title,
-    body.is-mobile-landscape .text-post-desc {
-      overflow-wrap: anywhere;
-      word-break: keep-all;
+      .text-post-title,
+      .text-post-desc {
+        overflow-wrap: anywhere;
+        word-break: keep-all;
+      }
     }
 
     /* ── 뉴스레터 ── */
@@ -956,36 +958,6 @@
   </footer>
 
 
-
-<script>
-(function(){
-  const mq = window.matchMedia('(max-width: 960px) and (orientation: landscape)');
-
-  function applyTextLayoutFix(){
-    document.body.classList.toggle('is-mobile-landscape', mq.matches);
-    // Clear accidental horizontal offset only; never force vertical scroll or reflow during mobile scroll.
-    document.documentElement.scrollLeft = 0;
-    document.body.scrollLeft = 0;
-  }
-
-  function scheduleTextLayoutFix(){
-    window.requestAnimationFrame(applyTextLayoutFix);
-  }
-
-  window.addEventListener('load', scheduleTextLayoutFix, { passive: true });
-  window.addEventListener('pageshow', scheduleTextLayoutFix, { passive: true });
-  window.addEventListener('orientationchange', function(){
-    scheduleTextLayoutFix();
-    setTimeout(scheduleTextLayoutFix, 120);
-  }, { passive: true });
-  if (mq.addEventListener) {
-    mq.addEventListener('change', scheduleTextLayoutFix);
-  } else {
-    mq.addListener(scheduleTextLayoutFix);
-  }
-  scheduleTextLayoutFix();
-})();
-  </script>
 
   <script>
     const NEWSLETTER_URL = 'https://script.google.com/a/macros/yangjari-editions.com/s/AKfycbye3PjtFxT5sqjFrRoWQkpYe0nVOg1dDmFZ_YD1Q7uH6bdsnCPsmkDwTZ6nMQVRkJRIyQ/exec';
