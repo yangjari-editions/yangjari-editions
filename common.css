@@ -259,6 +259,14 @@ html.fonts-ready body { visibility: visible; }
 .quote-line { display: block; }
 .quote-source { display: block; margin-top: 2px; }
 
+@media (min-width: 821px) {
+  .quote-inner {
+    width: calc(100% + 24px);
+    max-width: calc(100% + 24px);
+    justify-self: center;
+  }
+}
+
 /* ── 푸터 ── */
 .footer { padding: 8mm 0 12mm 0; font-size: 18px; text-align: center; color: var(--text); }
 
