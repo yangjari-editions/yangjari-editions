@@ -17,11 +17,11 @@ const TEXT_POSTS = [
     author:     "루이페르디낭 셀린",
     translator: "표은선 번역",
     date:       "2026년 5월 1일",
-    desc:       "『라블레, 그는 한 방을 놓쳤다 (Rabelais, il a raté son coup)』, 1957년"
+    desc:       "『라블레, 그는 한 방을 놓쳤다 (Rabelais, il a raté son coup)』"
   },
   {
     href:       "/text/cezanne_bernard/",
-    img:        "images/text/cezanne_bernard/cezanne-mont-sainte-victoire_main.webp",
+    img:        "images/text/cezanne_bernard/cezanne-mont-sainte-victoire_main_01.webp",
     alt:        "— 편지",
     title:      "— 편지",
     author:     "폴 세잔",
@@ -37,7 +37,7 @@ const TEXT_POSTS = [
     author:     "쥘 바르베 도르비이",
     translator: "표은선 번역",
     date:       "2026년 4월 5일",
-    desc:       "『댄디즘과 조지 브러멀(Du Dandysme et de Georges Brummell)』의 제2판 서문"
+    desc:       "『댄디즘과 조지 브러멀에 대하여(Du Dandysme et de Georges Brummell)』의 제2판 서문"
   },
   {
     href:       "/text/dialogue-petite-edition/",
