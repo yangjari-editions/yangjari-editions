@@ -12,8 +12,8 @@ const TEXT_POSTS = [
   {
     href:       "/text/celine_rabelais/",
     img:        "images/text/celine_rabelais/cr_main_01.Webp",
-    alt:        "— 라블레에 대하여",
-    title:      "— 라블레에 대하여",
+    alt:        "— 프랑수아 라블레에 대하여",
+    title:      "— 프랑수아 라블레에 대하여",
     author:     "루이페르디낭 셀린",
     translator: "표은선 번역",
     date:       "2026년 5월 1일",
@@ -37,7 +37,7 @@ const TEXT_POSTS = [
     author:     "쥘 바르베 도르비이",
     translator: "표은선 번역",
     date:       "2026년 4월 5일",
-    desc:       "『댄디즘과 조지 브러멀에 대하여(Du Dandysme et de Georges Brummell)』의 제2판 서문"
+    desc:       "『댄디즘과 조지 브러멀(Du Dandysme et de Georges Brummell)』의 제2판 서문"
   },
   {
     href:       "/text/dialogue-petite-edition/",
