@@ -689,7 +689,7 @@
     // 텍스트 렌더링 (text-data.js)
     (function () {
       const container = document.getElementById('text-posts');
-      TEXT_POSTS.forEach(function (post) {
+      TEXT_POSTS.slice(0, 6).forEach(function (post) {
         const a = document.createElement('a');
         a.className = 'text-post';
         a.href = post.href;
