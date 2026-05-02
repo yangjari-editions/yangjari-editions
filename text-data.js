@@ -10,6 +10,26 @@
 
 const TEXT_POSTS = [
   {
+    href:       "/text/celine_rabelais/",
+    img:        "images/text/celine_rabelais/cr_main_01.Webp",
+    alt:        "— 라블레에 대하여",
+    title:      "— 라블레에 대하여",
+    author:     "루이페르디낭 셀린",
+    translator: "표은선 번역",
+    date:       "2026년 5월 1일",
+    desc:       "『라블레, 그는 한 방을 놓쳤다 (Rabelais, il a raté son coup)』, 1957년"
+  },
+  {
+    href:       "/text/cezanne_bernard/",
+    img:        "images/text/cezanne_bernard/cezanne-mont-sainte-victoire_main.webp",
+    alt:        "— 편지",
+    title:      "— 편지",
+    author:     "폴 세잔",
+    translator: "표은선 번역",
+    date:       "2026년 4월 17일",
+    desc:       "에밀 베르나르(Émile Bernard)에게 보내는 세잔의 편지"
+  },
+  {
     href:       "/text/gb_01/",
     img:        "images/text/gb_01/17227368886.jpg",
     alt:        "— 서문",
@@ -27,7 +47,7 @@ const TEXT_POSTS = [
     author:     "브뤼노 루아",
     translator: "표은선 번역",
     date:       "2026년 3월 28일",
-    desc:       "파타 모르가나 출판사(Éditions Fata Morgana)의 설립자 브뤼노 루아와 작가 베르나르 노엘의 대화"
+    desc:       "파타 모르가나의 설립자 브뤼노 루아(Bruno Roy)의 소규모 출판에 대한 대화"
   },
   {
     href:       "/text/huysmans-interview/",
@@ -47,6 +67,6 @@ const TEXT_POSTS = [
     author:     "귀스타브 플로베르",
     translator: "표은선 번역",
     date:       "2026년 3월 1일",
-    desc:       "루이즈 콜레에게 보내는 귀스타브 플로베르의 편지"
+    desc:       "루이즈 콜레(Louise Colet)에게 보내는 플로베르의 편지"
   }
 ];
