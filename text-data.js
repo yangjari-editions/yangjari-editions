@@ -11,7 +11,7 @@
 const TEXT_POSTS = [
   {
     href:       "/text/celine_rabelais/",
-    img:        "images/text/celine_rabelais/cr_main_01.Webp",
+    img:        "images/text/celine_rabelais/meudon_celine.jpg",
     alt:        "— 프랑수아 라블레에 대하여",
     title:      "— 프랑수아 라블레에 대하여",
     author:     "루이페르디낭 셀린",
