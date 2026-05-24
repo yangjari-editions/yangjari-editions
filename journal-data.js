@@ -4,7 +4,7 @@
 const JOURNAL_POSTS = [
   {
     href:   "/journal/artaud/",
-    img:    "images/journal/artaud/img2.jpg",
+    img:    "images/journal/artaud/artaud_img_02.jpg",
     title:  "사운드 파빌리온 #001",
     author: "",
     date:   "2026년 5월 24일"
