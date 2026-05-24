@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script>document.documentElement.classList.add('fonts-loading');</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="../">
+  <meta name="source-filename" content="artaud" />
+  <meta name="description" content="" />
+  <title>사운드 파빌리온 #001</title>
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="stylesheet" href="../common.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2D1CQGLS07"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2D1CQGLS07');
+  </script>
+  <style>
+
+    html, body { min-height: 100%; }
+    body { display: flex; flex-direction: column; min-height: 100dvh; }
+
+    .day-wrap {
+      flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0;
+    }
+
+    .day-slide-area {
+      flex: 1; position: relative; overflow: hidden;
+      cursor: pointer; min-height: 0;
+    }
+
+    .day-slide {
+      position: absolute;
+      top: calc(18px * 1.15 + 8mm); left: 0; right: 0; bottom: calc(18px * 1.15 + 8mm);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+    }
+
+    .day-slide.is-active { opacity: 1; pointer-events: auto; }
+
+    .day-slide img {
+      max-width: 100%; max-height: 100%;
+      width: auto; height: auto; object-fit: contain;
+      display: block; user-select: none; -webkit-user-drag: none;
+      padding: 0 4mm; box-sizing: border-box;
+    }
+
+    .day-slide--text { padding: 0 4mm; box-sizing: border-box; }
+
+    .day-slide--text .day-text-inner { width: 100%; max-width: 680px; text-align: center; }
+
+    .day-slide--text .day-text-body {
+      font-family: var(--ui-font);
+      font-size: 18px; font-weight: 400;
+      line-height: 1.7; letter-spacing: -0.01em; color: var(--text);
+    }
+
+    .day-slide--audio { padding: 0 4mm; box-sizing: border-box; }
+
+    .day-audio-wrap {
+      width: min(100%, 560px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 20px;
+    }
+
+    .day-audio-wrap audio {
+      width: min(100%, 420px);
+      display: block;
+    }
+
+    .day-audio-desc {
+      max-width: 420px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--rule);
+      text-align: center;
+      font-family: var(--ui-font);
+      letter-spacing: -0.01em;
+    }
+
+    .day-caption-wrap { flex-shrink: 0; padding: 8px 4mm 10px 4mm; }
+
+    .day-caption {
+      font-size: 15px; line-height: 1.6; color: var(--text);
+      font-family: var(--ui-font); min-height: 1.6em; text-align: center;
+    }
+
+    .day-caption.is-hidden { visibility: hidden; }
+
+    .day-back {
+      position: absolute;
+      top: 0; left: 0;
+      height: calc(18px * 1.15 + 8mm);
+      display: flex;
+      align-items: center;
+      padding: 0 4mm;
+      font-size: 18px;
+      color: var(--text);
+      text-decoration: none;
+      z-index: 10;
+      font-family: var(--ui-font);
+      letter-spacing: -0.01em;
+    }
+    .day-back:hover { opacity: 0.5; }
+
+    .day-counter {
+      position: absolute;
+      top: 0; right: 0;
+      height: calc(18px * 1.15 + 8mm);
+      display: flex;
+      align-items: center;
+      padding: 0 4mm;
+      font-size: 15px;
+      color: var(--text);
+      font-family: var(--ui-font);
+      letter-spacing: -0.01em;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    @media (max-width: 820px) {
+      .day-caption { font-size: 14px; }
+      .day-slide--text .day-text-inner { text-align: center; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <header class="header" style="position: relative;">
+    <div class="logo"><a href="/">양자리출판사</a></div>
+    <nav class="nav" aria-label="주요 메뉴">
+      <a href="/catalog/">카탈로그</a><span class="spacer">　　</span>
+      <a href="/text/">텍스트</a><span class="spacer">　　</span>
+      <a href="/journal/" class="active">저널</a><span class="spacer">　　</span>
+      <a href="/scrap/">스크랩</a>
+      <span class="nav-icons">
+        <button aria-label="검색" id="search-btn">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.2"/>
+            <line x1="11.5" y1="11.5" x2="16.5" y2="16.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button aria-label="메뉴" id="menu-btn">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="1" x2="18" y2="1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="0" y1="7" x2="18" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="0" y1="13" x2="18" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </span>
+    </nav>
+    <div class="header-search-overlay" id="header-search-overlay">
+      <input type="text" placeholder="검색" id="search-input" />
+      <button class="header-search-close" id="search-close">닫기</button>
+    </div>
+  </header>
+
+  <!-- 메뉴 오버레이 -->
+  <div class="menu-overlay" id="menu-overlay">
+    <div class="menu-overlay-top">
+      <div class="menu-overlay-spacer">&nbsp;</div>
+      <div class="menu-overlay-nav">
+        <span class="menu-overlay-close">
+          <span style="display:inline-flex;width:18px;height:18px;"></span>
+          <button id="menu-close" aria-label="메뉴 닫기">
+            <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" y1="1" x2="18" y2="1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              <line x1="0" y1="7" x2="18" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              <line x1="0" y1="13" x2="18" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </span>
+      </div>
+    </div>
+    <div class="menu-overlay-body">
+      <div class="menu-overlay-links">
+        <a href="/catalog/">카탈로그</a>
+        <a href="/text/">텍스트</a>
+        <a href="/journal/">저널</a>
+        <a href="/scrap/">스크랩</a>
+        <span class="menu-overlay-spacer"></span>
+        <span>양자리출판사</span>
+        <span style="padding-left:0.65em;">(03127)</span>
+        <span style="padding-left:0.65em;">서울시 종로구</span>
+        <span style="padding-left:0.65em;">대학로 47, 1212</span>
+        <span class="menu-overlay-spacer"></span>
+        <a href="mailto:mail@yangjari-editions.com">메일</a>
+        <a href="https://instagram.com/yangjari_editions" target="_blank">인스타그램</a>
+        <span class="menu-newsletter-wrap" id="menu-newsletter-wrap">
+          <button class="menu-newsletter-btn" id="menu-newsletter-btn" onclick="openNewsletter()">뉴스레터</button>
+          <div class="menu-newsletter-form" id="menu-newsletter-form" style="display:none;">
+            <input class="menu-newsletter-input" id="newsletter-name" type="text" placeholder="이름" autocomplete="off" />
+            <input class="menu-newsletter-input" id="newsletter-email" type="email" placeholder="이메일" autocomplete="off" />
+            <button class="menu-newsletter-submit" id="newsletter-submit" onclick="submitNewsletter()">확인</button>
+          </div>
+          <span class="menu-newsletter-done" id="newsletter-done" style="display:none;">완료</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <main class="day-wrap">
+
+    <div class="day-slide-area" id="day-slide-area">
+      <a class="day-back" href="../journal/">←</a>
+      <div class="day-counter" id="day-counter">1 / ${slides.length}</div>
+
+      <div class="day-slide day-slide--text">
+        <div class="day-text-inner">
+          <div class="day-text-body" style="font-size:20px">사운드 파빌리온은<br>책에서 출발한 문장을 <br>낭독과 사운드로<br>확장하는 프로젝트입니다. <br><br>하나의 책은 목소리와 트랙이 되고<br>때로는 낭독극과 공연으로 이어지며<br>다시 새로운 책의 형태로 돌아옵니다.<br>그 과정에서 만들어진 장소는<br>또 다른 형식의 읽기와 만남으로<br>이어집니다</div>
+        </div>
+      </div>
+
+      <div class="day-slide day-slide--audio" data-caption="앙토냉 아르토, 자크 리비에르와의 서신">
+        <div class="day-audio-wrap">
+          <audio controls preload="metadata">
+            <source src="../audio/journal/artaud/Artaud_Riviere _F2.mp3" type="audio/mpeg" />
+          </audio>
+        </div>
+      </div>
+
+      <div class="day-slide day-slide--text">
+        <div class="day-text-inner">
+          <div class="day-text-body" style="font-size:20px">음악 안상영<br>낭독 장철웅<br>디자인 주상교<br>기획 이옥준<br><br>© 2026, 양자리출판사</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-caption-wrap">
+      <div class="day-caption" id="day-caption"></div>
+    </div>
+
+  </main>
+
+  <script>
+
+    const slides    = Array.from(document.querySelectorAll('.day-slide'));
+    const captionEl = document.getElementById('day-caption');
+    const slideArea = document.getElementById('day-slide-area');
+    const counterEl = document.getElementById('day-counter');
+    let idx = 0;
+
+    function update() {
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === idx));
+      const cur = slides[idx];
+      const isText = cur.classList.contains('day-slide--text');
+      const cap = cur.dataset.caption || '';
+      if (cap) {
+        captionEl.textContent = cap;
+        captionEl.classList.remove('is-hidden');
+      } else {
+        captionEl.textContent = '';
+        captionEl.classList.add('is-hidden');
+      }
+      counterEl.textContent = (idx + 1) + ' / ' + slides.length;
+    }
+
+    function goNext() { idx = (idx + 1) % slides.length; update(); }
+    function goPrev() { idx = (idx - 1 + slides.length) % slides.length; update(); }
+
+    slideArea.addEventListener('click', goNext);
+
+    document.querySelectorAll('.day-audio-wrap, .day-audio-wrap audio').forEach(el => {
+      ['click', 'touchstart', 'touchend'].forEach(type => {
+        el.addEventListener(type, e => {
+          e.stopPropagation();
+        }, { passive: true });
+      });
+    });
+
+    let tx = 0;
+    slideArea.addEventListener('touchstart', e => { tx = e.changedTouches[0].clientX; }, { passive: true });
+    slideArea.addEventListener('touchend', e => {
+      const d = tx - e.changedTouches[0].clientX;
+      if (Math.abs(d) > 40) { d > 0 ? goNext() : goPrev(); }
+    }, { passive: true });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') goNext();
+      if (e.key === 'ArrowLeft')  goPrev();
+    });
+
+    update();
+
+    const searchBtn     = document.getElementById('search-btn');
+    const searchClose   = document.getElementById('search-close');
+    const searchOverlay = document.getElementById('header-search-overlay');
+    const searchInput   = document.getElementById('search-input');
+    searchBtn.addEventListener('click', () => { searchOverlay.classList.add('is-open'); searchInput.focus(); });
+    searchClose.addEventListener('click', () => { searchOverlay.classList.remove('is-open'); });
+
+    const menuBtn     = document.getElementById('menu-btn');
+    const menuClose   = document.getElementById('menu-close');
+    const menuOverlay = document.getElementById('menu-overlay');
+    menuBtn.addEventListener('click', () => { document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; menuOverlay.classList.add('is-open'); });
+    menuClose.addEventListener('click', () => { document.documentElement.style.overflow = ''; document.body.style.overflow = ''; menuOverlay.classList.remove('is-open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.documentElement.style.overflow = ''; document.body.style.overflow = ''; menuOverlay.classList.remove('is-open'); } });
+
+  </script>
+
+  <script>
+    (function () {
+      const html = document.documentElement; let revealed = false;
+      function reveal() { if (revealed) return; revealed = true; html.classList.remove('fonts-loading'); html.classList.add('fonts-ready'); }
+      const t = setTimeout(reveal, 5000);
+      Promise.all([document.fonts.load('400 1em "GothicA1"'), document.fonts.ready])
+        .then(() => { clearTimeout(t); requestAnimationFrame(reveal); }).catch(() => { clearTimeout(t); reveal(); });
+    })();
+  </script>
+
+  <script id="site-menu-script">
+    (function () {
+      const NEWSLETTER_URL = 'https://script.google.com/a/macros/yangjari-editions.com/s/AKfycbye3PjtFxT5sqjFrRoWQkpYe0nVOg1dDmFZ_YD1Q7uH6bdsnCPsmkDwTZ6nMQVRkJRIyQ/exec';
+      const html = document.documentElement;
+      const body = document.body;
+      const searchBtn = document.getElementById('search-btn');
+      const searchOverlay = document.getElementById('header-search-overlay');
+      const searchInput = document.getElementById('search-input');
+      const searchClose = document.getElementById('search-close');
+      const menuBtn = document.getElementById('menu-btn');
+      const menuClose = document.getElementById('menu-close');
+      const menuOverlay = document.getElementById('menu-overlay');
+      function closeSearch() { if (!searchOverlay || !searchInput) return; searchOverlay.classList.remove('is-open'); searchInput.value = ''; }
+      function closeMenu() { html.style.overflow = ''; body.style.overflow = ''; if (menuOverlay) menuOverlay.classList.remove('is-open'); }
+      if (searchBtn && searchOverlay && searchInput) {
+        searchBtn.addEventListener('click', function () { searchOverlay.classList.add('is-open'); searchInput.focus(); });
+        searchInput.addEventListener('keydown', function (e) { if (e.key === 'Enter' && searchInput.value.trim()) window.location.href = '/search/?q=' + encodeURIComponent(searchInput.value.trim()); });
+      }
+      if (searchClose) searchClose.addEventListener('click', closeSearch);
+      if (menuBtn && menuOverlay) menuBtn.addEventListener('click', function () { html.style.overflow = 'hidden'; body.style.overflow = 'hidden'; menuOverlay.classList.add('is-open'); });
+      if (menuClose) menuClose.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { closeSearch(); closeMenu(); }
+        if (e.key === 'Enter') {
+          const nameEl = document.getElementById('newsletter-name');
+          const emailEl = document.getElementById('newsletter-email');
+          if (document.activeElement === nameEl) { emailEl.focus(); e.preventDefault(); }
+          else if (document.activeElement === emailEl) { window.submitNewsletter(); e.preventDefault(); }
+        }
+      });
+      window.openNewsletter = function () {
+        const btn = document.getElementById('menu-newsletter-btn');
+        const form = document.getElementById('menu-newsletter-form');
+        const name = document.getElementById('newsletter-name');
+        if (btn) btn.style.display = 'none';
+        if (form) form.style.display = 'flex';
+        if (name) name.focus();
+      };
+      window.submitNewsletter = function () {
+        const nameEl = document.getElementById('newsletter-name');
+        const emailEl = document.getElementById('newsletter-email');
+        const submitBtn = document.getElementById('newsletter-submit');
+        const form = document.getElementById('menu-newsletter-form');
+        const done = document.getElementById('newsletter-done');
+        const name = nameEl ? nameEl.value.trim() : '';
+        const email = emailEl ? emailEl.value.trim() : '';
+        if (!name || !email || !submitBtn) return;
+        submitBtn.textContent = '전송 중...';
+        submitBtn.style.pointerEvents = 'none';
+        fetch(NEWSLETTER_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ name, email }) }).catch(function () {});
+        setTimeout(function () { if (form) form.style.display = 'none'; if (done) done.style.display = 'block'; }, 1000);
+      };
+    })();
+  </script>
+</body>
+</html>

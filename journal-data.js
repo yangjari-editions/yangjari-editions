@@ -3,6 +3,13 @@
 
 const JOURNAL_POSTS = [
   {
+    href:   "/journal/artaud/",
+    img:    "images/journal/artaud/img2.jpg",
+    title:  "사운드 파빌리온 #001",
+    author: "",
+    date:   "2026년 5월 24일"
+  },
+  {
     href:   "/journal/day_01/",
     img:    "images/journal/day_01/text_pg_05.webp",
     title:  "이옥준: 침대에서 읽은 책",
