@@ -901,7 +901,41 @@
           '<a href="' + book.href + '" class="catalog-title">' + book.title + '</a>';
         track.appendChild(card);
       });
+      requestAnimationFrame(lockCatalogBookSize);
     })();
+
+    function lockCatalogBookSize() {
+      const books = document.querySelectorAll('.catalog-book');
+      books.forEach(function (book) {
+        book.style.height = '';
+        book.style.width = '';
+
+        const height = book.getBoundingClientRect().height;
+        if (!height) return;
+
+        const width = height * 110 / 195;
+        book.style.height = height + 'px';
+        book.style.width = width + 'px';
+      });
+    }
+
+    let catalogResizeTimer = null;
+    let catalogViewportWidth = window.innerWidth;
+    window.addEventListener('resize', function () {
+      clearTimeout(catalogResizeTimer);
+      catalogResizeTimer = setTimeout(function () {
+        if (Math.abs(window.innerWidth - catalogViewportWidth) < 2) return;
+        catalogViewportWidth = window.innerWidth;
+        requestAnimationFrame(lockCatalogBookSize);
+      }, 250);
+    });
+
+    window.addEventListener('orientationchange', function () {
+      setTimeout(function () {
+        catalogViewportWidth = window.innerWidth;
+        requestAnimationFrame(lockCatalogBookSize);
+      }, 400);
+    });
 
     // 메뉴 오버레이
     const menuBtn = document.getElementById('menu-btn');
