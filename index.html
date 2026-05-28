@@ -48,10 +48,11 @@
       user-select: none;
       display: flex;
       overflow-x: auto;
+      overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior-x: contain;
-      overscroll-behavior-y: auto;
-      touch-action: pan-y pinch-zoom;
+      scroll-behavior: smooth;
+      touch-action: pan-x pan-y;
       scrollbar-width: none;
       gap: 12px;
       padding-left: 4mm;
@@ -194,7 +195,7 @@
 
     .text-posts {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       column-gap: 25px;
       row-gap: 40px;
     }
@@ -204,6 +205,7 @@
       flex-direction: column;
       text-decoration: none;
       color: inherit;
+      min-width: 0;
     }
 
     .text-post-image {
@@ -211,6 +213,7 @@
       overflow: hidden;
       background: #d0cfc9;
       margin-bottom: 12px;
+      min-width: 0;
     }
     .text-post-image img {
       width: 100%;
@@ -225,11 +228,17 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
+      min-width: 0;
+    }
+
+    .text-post-meta > * {
+      min-width: 0;
     }
 
     .text-post-left {
       display: flex;
       flex-direction: column;
+      min-width: 0;
     }
 
     .text-post-title {
@@ -414,7 +423,8 @@
     }
 
     .catalog-book {
-      width: 300px;
+      height: clamp(460px, 58vh, 520px);
+      width: calc(clamp(460px, 58vh, 520px) * 110 / 195);
       aspect-ratio: 110 / 195;
       position: relative;
       overflow: hidden;
@@ -452,15 +462,47 @@
     @media (max-width: 820px) {
       .quote-inner { grid-column: 1; text-align: left; padding: 18px 18px 18px 4mm; }
       .artaud-indent { padding-left: 4mm; }
-      .slide-card {
-        flex-basis: calc(100vw - 8mm);
-        width: calc(100vw - 8mm);
+      .catalog-book {
+        height: clamp(400px, 56vh, 480px);
+        width: calc(clamp(400px, 56vh, 480px) * 110 / 195);
       }
-      .text-posts { grid-template-columns: 1fr; gap: 25px; }
       .slider-wrap::after { width: 80px; }
       .news-grid { grid-template-columns: 1fr; }
       
       .scrap-title { font-size: 15px; }
+    }
+
+    @media (min-width: 600px) and (max-width: 820px) {
+      .slide-card {
+        flex: 0 0 clamp(260px, 38vw, 300px);
+        width: clamp(260px, 38vw, 300px);
+      }
+
+      .slide-card:last-child {
+        margin-right: 80px;
+      }
+
+      .text-posts {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        column-gap: 25px;
+        row-gap: 40px;
+      }
+    }
+
+    @media (max-width: 599px) {
+      .slide-card {
+        flex: 0 0 clamp(220px, 64vw, 320px);
+        width: clamp(220px, 64vw, 320px);
+      }
+
+      .slide-card:last-child {
+        margin-right: 30vw;
+      }
+
+      .text-posts {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
     }
 
 
@@ -469,15 +511,11 @@
     }
 
     @media (max-width: 960px) and (orientation: landscape) {
-      .text-posts {
-        grid-template-columns: 1fr;
-        gap: 25px;
-      }
-
       .text-post,
       .text-post-meta,
       .text-post-meta > *,
-      .text-post-left {
+      .text-post-left,
+      .text-post-image {
         min-width: 0;
       }
 
@@ -804,61 +842,6 @@
       slider.style.cursor = 'grab';
       setTimeout(() => slider.classList.remove('is-dragging'), 0);
     });
-
-    /* ── 모바일 터치: 가로/세로 제스처 분리 ── */
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchStartScrollLeft = 0;
-    let touchLock = null;
-    let touchMoved = false;
-
-    slider.addEventListener('touchstart', (e) => {
-      if (e.touches.length !== 1) return;
-      const t = e.touches[0];
-      touchStartX = t.clientX;
-      touchStartY = t.clientY;
-      touchStartScrollLeft = slider.scrollLeft;
-      touchLock = null;
-      touchMoved = false;
-    }, { passive: true });
-
-    slider.addEventListener('touchmove', (e) => {
-      if (e.touches.length !== 1) return;
-      const t = e.touches[0];
-      const dx = t.clientX - touchStartX;
-      const dy = t.clientY - touchStartY;
-      const absX = Math.abs(dx);
-      const absY = Math.abs(dy);
-
-      if (!touchLock && Math.max(absX, absY) > 2) {
-        if (absX > 3 && absX > absY * 0.82) touchLock = 'horizontal';
-        else if (absY > 6 && absY > absX * 1.35) touchLock = 'vertical';
-      }
-
-      if (touchLock === 'horizontal') {
-        e.preventDefault();
-        touchMoved = true;
-        dragMoved = true;
-        slider.classList.add('is-dragging');
-        slider.scrollLeft = touchStartScrollLeft - dx;
-      } else if (touchLock === 'vertical') {
-        touchMoved = true;
-        suppressClick = true;
-      }
-    }, { passive: false });
-
-    function endTouchScroll() {
-      if (touchMoved) {
-        suppressClick = true;
-        window.setTimeout(() => { suppressClick = false; }, 220);
-      }
-      touchLock = null;
-      touchMoved = false;
-      setTimeout(() => slider.classList.remove('is-dragging'), 0);
-    }
-
-    slider.addEventListener('touchend', endTouchScroll, { passive: true });
-    slider.addEventListener('touchcancel', endTouchScroll, { passive: true });
 
     /* 드래그/스크롤 중이면 링크 클릭 차단 */
     slider.addEventListener('click', (e) => {

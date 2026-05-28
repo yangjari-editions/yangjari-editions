@@ -26,7 +26,7 @@
 
     .text-posts {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       column-gap: 30px;
       row-gap: 40px;
     }
@@ -36,6 +36,7 @@
       flex-direction: column;
       text-decoration: none;
       color: inherit;
+      min-width: 0;
     }
 
     .text-post-image {
@@ -43,6 +44,7 @@
       overflow: hidden;
       background: #d0cfc9;
       margin-bottom: 12px;
+      min-width: 0;
     }
     .text-post-image img {
       width: 100%;
@@ -57,11 +59,17 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
+      min-width: 0;
+    }
+
+    .text-post-meta > * {
+      min-width: 0;
     }
 
     .text-post-left {
       display: flex;
       flex-direction: column;
+      min-width: 0;
     }
 
     .text-post-title {
@@ -82,11 +90,22 @@
       color: var(--rule);
     }
 
-    /* ── 모바일 ── */
-    @media (max-width: 820px) {
+    @media (min-width: 600px) and (max-width: 820px) {
+      .text-posts {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        column-gap: 30px;
+        row-gap: 40px;
+      }
+
+      .text-post-meta {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 599px) {
       .text-posts {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 25px;
       }
 
       .text-post-meta {
@@ -95,15 +114,12 @@
     }
 
     @media (max-width: 960px) and (orientation: landscape) {
-      body.is-mobile-landscape .text-posts {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
       body.is-mobile-landscape .text-post,
       body.is-mobile-landscape .text-post-meta,
       body.is-mobile-landscape .text-post-left,
-      body.is-mobile-landscape .text-post-desc {
+      body.is-mobile-landscape .text-post-desc,
+      body.is-mobile-landscape .text-post-image,
+      body.is-mobile-landscape .text-post-meta > * {
         min-width: 0;
       }
 
