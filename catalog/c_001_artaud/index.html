@@ -220,27 +220,19 @@
       const height = slider.getBoundingClientRect().height;
       if (!height) return;
 
-      slider.style.height = height + 'px';
+      slider.style.height = Math.round(height) + 'px';
     }
+
+    window.addEventListener('load', function () {
+      requestAnimationFrame(lockProductSliderHeight);
+    });
 
     requestAnimationFrame(lockProductSliderHeight);
 
-    let productSliderResizeTimer = null;
-    let productSliderViewportWidth = window.innerWidth;
-    window.addEventListener('resize', function () {
-      clearTimeout(productSliderResizeTimer);
-      productSliderResizeTimer = setTimeout(function () {
-        if (Math.abs(window.innerWidth - productSliderViewportWidth) < 2) return;
-        productSliderViewportWidth = window.innerWidth;
-        requestAnimationFrame(lockProductSliderHeight);
-      }, 250);
-    });
-
     window.addEventListener('orientationchange', function () {
       setTimeout(function () {
-        productSliderViewportWidth = window.innerWidth;
         requestAnimationFrame(lockProductSliderHeight);
-      }, 400);
+      }, 500);
     });
     const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
     document.getElementById('quote-inner').innerHTML = '<span class="quote-line">' + q.line + '</span><span class="quote-source">' + q.source + '</span>';
