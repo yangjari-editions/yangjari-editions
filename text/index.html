@@ -353,12 +353,6 @@
       function syncMobileLandscapeState() {
         const isLandscape = window.matchMedia('(max-width: 960px) and (orientation: landscape)').matches;
         body.classList.toggle('is-mobile-landscape', isLandscape);
-
-        if (!isLandscape) {
-          window.scrollTo(0, window.scrollY || 0);
-          document.documentElement.scrollLeft = 0;
-          document.body.scrollLeft = 0;
-        }
       }
 
       let rafId = null;
@@ -371,7 +365,6 @@
         });
       }
 
-      window.addEventListener('resize', requestSync, { passive: true });
       window.addEventListener('orientationchange', requestSync, { passive: true });
       window.addEventListener('pageshow', requestSync, { passive: true });
       document.addEventListener('DOMContentLoaded', requestSync);
