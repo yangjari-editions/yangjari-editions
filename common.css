@@ -83,7 +83,6 @@ html.fonts-ready body { visibility: visible; }
 
 /* ── 메뉴 오버레이 ── */
 .menu-overlay {
-  touch-action: pan-y;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   display: flex;

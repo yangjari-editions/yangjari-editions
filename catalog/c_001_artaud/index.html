@@ -216,8 +216,11 @@
     productSlider.addEventListener('touchend', function (e) {
       const dx = tx - e.changedTouches[0].clientX;
       const dy = ty - e.changedTouches[0].clientY;
+
       if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
-        productSlideIndex = dx > 0 ? (productSlideIndex + 1) % productSlides.length : (productSlideIndex - 1 + productSlides.length) % productSlides.length;
+        productSlideIndex = dx > 0
+          ? (productSlideIndex + 1) % productSlides.length
+          : (productSlideIndex - 1 + productSlides.length) % productSlides.length;
         updateSlider();
       }
     }, { passive: true });
