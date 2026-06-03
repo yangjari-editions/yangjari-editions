@@ -10,6 +10,16 @@
 
 const TEXT_POSTS = [
   {
+    href:       "/text/cioran_entretien/",
+    img:        "images/text/cioran_entretien/cioran_entretien00.webp",
+    alt:        "— 인터뷰",
+    title:      "— 인터뷰",
+    author:     "에밀 시오랑",
+    translator: "표은선 번역",
+    date:       "2026년 6월 3일",
+    desc:       "「깨우기 위해 쓰다(Escribir para despertar)」, 『엘 파이스 El País』, 1977년"
+  },
+  {
     href:       "/text/celine_rabelais/",
     img:        "images/text/celine_rabelais/meudon_celine.jpg",
     alt:        "— 프랑수아 라블레에 대하여",
