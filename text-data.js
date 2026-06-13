@@ -32,8 +32,8 @@ const TEXT_POSTS = [
   {
     href:       "/text/cezanne_bernard/",
     img:        "images/text/cezanne_bernard/cezanne-mont-sainte-victoire_main_01.webp",
-    alt:        "— 편지",
-    title:      "— 편지",
+    alt:        "— 에밀 베르나르에게 보내는 편지",
+    title:      "— 에밀 베르나르에게 보내는 편지",
     author:     "폴 세잔",
     translator: "표은선 번역",
     date:       "2026년 4월 17일",
@@ -42,8 +42,8 @@ const TEXT_POSTS = [
   {
     href:       "/text/gb_01/",
     img:        "images/text/gb_01/17227368886.jpg",
-    alt:        "— 서문",
-    title:      "— 서문",
+    alt:        "— 『댄디즘과 조지 브러멀』 서문",
+    title:      "— 『댄디즘과 조지 브러멀』 서문",
     author:     "쥘 바르베 도르비이",
     translator: "표은선 번역",
     date:       "2026년 4월 5일",
@@ -72,8 +72,8 @@ const TEXT_POSTS = [
   {
     href:       "/text/flaubert_lc/",
     img:        "images/text/flaubert_lc/text_04_main_0.webp",
-    alt:        "— 편지",
-    title:      "— 편지",
+    alt:        "— 루이즈 콜레에게 보내는 편지",
+    title:      "— 루이즈 콜레에게 보내는 편지",
     author:     "귀스타브 플로베르",
     translator: "표은선 번역",
     date:       "2026년 3월 1일",

@@ -194,8 +194,8 @@
 
     .text-posts {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      column-gap: 25px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 20px;
       row-gap: 40px;
     }
 
@@ -256,6 +256,16 @@
       font-size: 18px;
       line-height: 1.5;
       color: var(--rule);
+    }
+
+    @media (min-width: 821px) {
+      .text-post-meta {
+        display: block;
+      }
+
+      .text-post-desc {
+        display: none;
+      }
     }
 
     /* ── 저널 섹션 ── */
