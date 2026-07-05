@@ -10,6 +10,16 @@
 
 const TEXT_POSTS = [
   {
+    href:       "/text/gombrowicz/",
+    img:        "images/text/gombrowicz/gom_fed.jpg",
+    alt:        "— 일기",
+    title:      "— 일기",
+    author:     "비톨드 곰브로비치",
+    translator: "표은선 번역",
+    date:       "2026년 7월 5일",
+    desc:       ""
+  },
+  {
     href:       "/text/cioran_entretien/",
     img:        "images/text/cioran_entretien/cioran_entretien00.webp",
     alt:        "— 인터뷰",
@@ -67,8 +77,7 @@ const TEXT_POSTS = [
     author:     "조리스카를 위스망스",
     translator: "표은선 번역",
     date:       "2026년 3월 15일",
-    desc:       "인터뷰, 『오늘의 사람들(Les hommes d'aujourd'hui)』, N°263, 1886년",
-    hidden:     true
+    desc:       "인터뷰, 『오늘의 사람들(Les hommes d'aujourd'hui)』, N°263, 1886년"
   },
   {
     href:       "/text/flaubert_lc/",
