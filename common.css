@@ -70,6 +70,13 @@ html, body {
 html.fonts-loading body { visibility: hidden; }
 html.fonts-ready body { visibility: visible; }
 
+.artaud-inner,
+.product-copy,
+.post-body p,
+.post-footnotes-list li {
+  letter-spacing: 0;
+}
+
 
 ::selection {
   background: #EED347;
