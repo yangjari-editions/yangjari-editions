@@ -11,7 +11,7 @@
 const TEXT_POSTS = [
   {
     href:       "/text/gombrowicz/",
-    img:        "images/text/gombrowicz/gombrowicz_portrait.jpg",
+    img:        "images/text/gombrowicz/gombrowicz_main.jpg",
     alt:        "— 일기",
     title:      "— 일기",
     author:     "비톨드 곰브로비치",
