@@ -37,7 +37,8 @@ const TEXT_POSTS = [
     author:     "루이페르디낭 셀린",
     translator: "표은선 번역",
     date:       "2026년 5월 1일",
-    desc:       "『라블레, 그는 한 방을 놓쳤다 (Rabelais, il a raté son coup)』"
+    desc:       "『라블레, 그는 한 방을 놓쳤다 (Rabelais, il a raté son coup)』",
+    hidden:     true
   },
   {
     href:       "/text/cezanne_bernard/",
