@@ -17,6 +17,7 @@ const CATALOG_POSTS = [
     href:     "/catalog/c_001_artaud/",
     imgFront: "/images/catalog/catalogue_artaud_001.webp",
     imgBack:  null,
+    author:   "앙토냉 아르토",
     title:    "자크 리비에르와의 서신"
   }
 ];
