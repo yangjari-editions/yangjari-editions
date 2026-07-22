@@ -828,10 +828,21 @@
     // 텍스트 렌더링 (text-data.js)
     (function () {
       const container = document.getElementById('text-posts');
-      TEXT_POSTS
-        .filter(function (post) { return !post.hidden; })
-        .slice(0, 6)
-        .forEach(function (post) {
+      function normalizeTextHref(href) {
+        if (!href) return '';
+        return href.endsWith('/') ? href : href + '/';
+      }
+
+      const hiddenTextHrefs = [
+        '/text/huysmans-interview/',
+        '/text/celine_rabelais/'
+      ];
+
+      const visibleTextPosts = TEXT_POSTS.filter(function (post) {
+        return !post.hidden && !hiddenTextHrefs.includes(normalizeTextHref(post.href));
+      });
+
+      visibleTextPosts.slice(0, 6).forEach(function (post) {
         const a = document.createElement('a');
         a.className = 'text-post';
         a.href = post.href;
