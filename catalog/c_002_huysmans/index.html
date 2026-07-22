@@ -23,7 +23,7 @@
     .product-page { padding: 10mm 0 16mm 0; }
     .product-grid { width: 100%; max-width: 560px; margin: 0 auto; padding: 0 28px; display: grid; grid-template-columns: 1fr; gap: 0; align-items: start; }
     .product-media { min-width: 0; position: static; }
-    .product-slider { position: relative; width: 100%; height: clamp(420px, 62vh, 680px); overflow: hidden; background: var(--bg); cursor: pointer; touch-action: pan-y; }
+    .product-slider { position: relative; width: 100%; height: clamp(420px, 62vh, 680px); overflow: hidden; background: var(--bg); cursor: pointer; }
     .product-slider-track { position: relative; width: 100%; height: 100%; }
     .product-slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
     .product-slide.is-active { opacity: 1; pointer-events: auto; }
@@ -150,10 +150,10 @@
         <dl class="product-meta" style="margin-top: 0; margin-bottom: 7mm;">
           <dt>번역</dt>
           <dd>표은선</dd>
-          <dt>편집</dt>
-          <dd>이옥준</dd>
           <dt>디자인</dt>
           <dd>주상교</dd>
+          <dt>편집</dt>
+          <dd>이옥준</dd>
           <dt>판형</dt>
           <dd>105x180mm</dd>
           <dt>제본</dt>
@@ -210,46 +210,9 @@
     productPrev.addEventListener('click', () => { productSlideIndex = (productSlideIndex - 1 + productSlides.length) % productSlides.length; updateSlider(); });
     productSlider.addEventListener('click', () => { productSlideIndex = (productSlideIndex + 1) % productSlides.length; updateSlider(); });
     let tx = 0;
-    let ty = 0;
-    productSlider.addEventListener('touchstart', function (e) {
-      tx = e.changedTouches[0].clientX;
-      ty = e.changedTouches[0].clientY;
-    }, { passive: true });
-    productSlider.addEventListener('touchend', function (e) {
-      const dx = tx - e.changedTouches[0].clientX;
-      const dy = ty - e.changedTouches[0].clientY;
-
-      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
-        productSlideIndex = dx > 0
-          ? (productSlideIndex + 1) % productSlides.length
-          : (productSlideIndex - 1 + productSlides.length) % productSlides.length;
-        updateSlider();
-      }
-    }, { passive: true });
+    productSlider.addEventListener('touchstart', e => { tx = e.changedTouches[0].clientX; }, { passive: true });
+    productSlider.addEventListener('touchend', e => { const d = tx - e.changedTouches[0].clientX; if (Math.abs(d) > 40) { productSlideIndex = d > 0 ? (productSlideIndex + 1) % productSlides.length : (productSlideIndex - 1 + productSlides.length) % productSlides.length; updateSlider(); } }, { passive: true });
     updateSlider();
-    function lockProductSliderHeight() {
-      const slider = document.querySelector('.product-slider');
-      if (!slider) return;
-
-      slider.style.height = '';
-
-      const height = slider.getBoundingClientRect().height;
-      if (!height) return;
-
-      slider.style.height = Math.round(height) + 'px';
-    }
-
-    window.addEventListener('load', function () {
-      requestAnimationFrame(lockProductSliderHeight);
-    });
-
-    requestAnimationFrame(lockProductSliderHeight);
-
-    window.addEventListener('orientationchange', function () {
-      setTimeout(function () {
-        requestAnimationFrame(lockProductSliderHeight);
-      }, 500);
-    });
     const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
     document.getElementById('quote-inner').innerHTML = '<span class="quote-line">' + q.line + '</span><span class="quote-source">' + q.source + '</span>';
   </script>
