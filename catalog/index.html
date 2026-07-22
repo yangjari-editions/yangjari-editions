@@ -13,6 +13,8 @@
   <style>
     /* ── 카탈로그 섹션 ── */
     .catalog-section {
+      position: relative;
+      overflow: hidden;
     }
 
     .catalog-label {
@@ -22,9 +24,29 @@
     }
 
     .catalog-track {
+      --catalog-book-height: clamp(400px, 56vh, 520px);
+      --catalog-book-width: calc(var(--catalog-book-height) * 110 / 195);
+      --catalog-gap: 34px;
+      /* 더 넓게 보고 싶으면 38px */
+      --catalog-content-width: calc((var(--catalog-book-width) * 2) + var(--catalog-gap));
+
       display: flex;
-      justify-content: center;
-      padding: 0 0 40px 0;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: var(--catalog-gap);
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-top: 0;
+      padding-bottom: 40px;
+      padding-left: max(4mm, calc((100vw - var(--catalog-content-width)) / 2));
+      padding-right: max(80px, calc((100vw - var(--catalog-content-width)) / 2));
+      touch-action: auto;
+    }
+
+    .catalog-track::-webkit-scrollbar {
+      display: none;
     }
 
     .catalog-card {
@@ -34,35 +56,39 @@
       flex-direction: column;
       align-items: center;
       gap: 12px;
+      flex: 0 0 auto;
     }
 
     .catalog-book {
-      height: clamp(460px, 58vh, 520px);
-      width: calc(clamp(460px, 58vh, 520px) * 110 / 195);
+      height: var(--catalog-book-height);
+      width: var(--catalog-book-width);
       aspect-ratio: 110 / 195;
       position: relative;
       overflow: hidden;
     }
 
-    .catalog-book-front,
-    .catalog-book-back {
+    .catalog-book-front {
       position: absolute;
       inset: 0;
       background-size: cover;
       background-position: center;
     }
 
-    .catalog-book-back { opacity: 0; }
-
-
-
     .catalog-title {
       font-size: 18px;
       text-align: center;
       line-height: 1.4;
-      max-width: 200px;
+      max-width: 220px;
       color: inherit;
       text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .catalog-author,
+    .catalog-title-main {
       display: block;
     }
 
@@ -72,9 +98,16 @@
     }
 
     @media (max-width: 820px) {
-      .catalog-book {
-        height: clamp(400px, 56vh, 480px);
-        width: calc(clamp(400px, 56vh, 480px) * 110 / 195);
+      .catalog-section::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 90px;
+        background: linear-gradient(to right, transparent, var(--bg) 80%);
+        pointer-events: none;
+        z-index: 2;
       }
     }
 
@@ -257,6 +290,8 @@
     });
 
     // 카탈로그 렌더링
+    const shouldLockCatalogBooks = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
     (function () {
       const track = document.getElementById('catalog-track');
       CATALOG_POSTS.forEach(function (book) {
@@ -268,10 +303,15 @@
               '<div class="catalog-book-front" style="background-image:url(\'' + book.imgFront + '\');background-size:cover;background-position:center;"></div>' +
             '</div>' +
           '</a>' +
-          '<a href="' + book.href + '" class="catalog-title">' + book.title + '</a>';
+          '<a href="' + book.href + '" class="catalog-title">' +
+            (book.author ? '<span class="catalog-author">' + book.author + '</span>' : '') +
+            '<span class="catalog-title-main">' + book.title + '</span>' +
+          '</a>';
         track.appendChild(card);
       });
-      requestAnimationFrame(lockCatalogBookSize);
+      if (shouldLockCatalogBooks) {
+        requestAnimationFrame(lockCatalogBookSize);
+      }
     })();
 
     function lockCatalogBookSize() {
@@ -290,6 +330,7 @@
     }
 
     window.addEventListener('orientationchange', function () {
+      if (!shouldLockCatalogBooks) return;
       setTimeout(function () {
         requestAnimationFrame(lockCatalogBookSize);
       }, 400);
