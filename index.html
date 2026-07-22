@@ -534,6 +534,14 @@
     }
 
     @media (max-width: 599px) {
+      .catalog-track {
+        --catalog-book-height: clamp(440px, 64vh, 540px);
+        --catalog-book-width: calc(var(--catalog-book-height) * 110 / 195);
+        --catalog-gap: 38px;
+        padding-left: calc((100vw - var(--catalog-book-width)) / 2 - 8px);
+        padding-right: calc((100vw - var(--catalog-book-width)) / 2 + 90px);
+      }
+
       .slide-card {
         flex: 0 0 clamp(220px, 64vw, 320px);
         width: clamp(220px, 64vw, 320px);
