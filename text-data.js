@@ -17,7 +17,7 @@ const TEXT_POSTS = [
     author:     "비톨드 곰브로비치",
     translator: "표은선 번역",
     date:       "2026년 7월 5일",
-    desc:       ""
+    desc:       "베토벤과 예술의 형식에 대하여"
   },
   {
     href:       "/text/cioran_entretien/",
@@ -37,8 +37,7 @@ const TEXT_POSTS = [
     author:     "루이페르디낭 셀린",
     translator: "표은선 번역",
     date:       "2026년 5월 1일",
-    desc:       "『라블레, 그는 한 방을 놓쳤다 (Rabelais, il a raté son coup)』",
-    hidden:     true
+    desc:       "『라블레, 그는 한 방을 놓쳤다 (Rabelais, il a raté son coup)』"
   },
   {
     href:       "/text/cezanne_bernard/",
@@ -78,8 +77,7 @@ const TEXT_POSTS = [
     author:     "조리스카를 위스망스",
     translator: "표은선 번역",
     date:       "2026년 3월 15일",
-    desc:       "인터뷰, 『오늘의 사람들(Les hommes d'aujourd'hui)』, N°263, 1886년",
-    hidden:     true
+    desc:       "인터뷰, 『오늘의 사람들(Les hommes d'aujourd'hui)』, N°263, 1886년"
   },
   {
     href:       "/text/flaubert_lc/",
