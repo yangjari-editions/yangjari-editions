@@ -289,3 +289,167 @@ html.fonts-ready body { visibility: visible; }
   .menu-overlay-links { grid-column: 1; padding-left: 4mm; }
   .menu-overlay-body { min-height: 0; grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── 클릭·터치 기본 하이라이트 제거 ── */
+html,
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+input,
+textarea,
+select,
+summary,
+[role="button"],
+[tabindex],
+[onclick],
+.menu-toggle,
+.menu-panel,
+.menu-panel a,
+.slide-arrow,
+.slide-arrow-left,
+.catalog-arrow,
+.catalog-arrow-left,
+.catalog-book-link,
+.catalog-title,
+.catalog-card,
+.product-slider,
+.slide-card,
+.text-card,
+.text-post,
+.journal-card,
+.scrap-card,
+.scrap-item,
+.quote-card {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+input,
+textarea,
+select,
+summary,
+[role="button"],
+[tabindex],
+[onclick],
+.menu-toggle,
+.slide-arrow,
+.slide-arrow-left,
+.catalog-arrow,
+.catalog-arrow-left,
+.catalog-book-link,
+.catalog-title,
+.catalog-card,
+.product-slider,
+.slide-card,
+.text-card,
+.text-post,
+.journal-card,
+.scrap-card,
+.scrap-item,
+.quote-card {
+  outline: none;
+  box-shadow: none;
+}
+
+a:focus,
+a:focus-visible,
+a:active,
+button:focus,
+button:focus-visible,
+button:active,
+input:focus,
+input:focus-visible,
+input:active,
+textarea:focus,
+textarea:focus-visible,
+textarea:active,
+select:focus,
+select:focus-visible,
+select:active,
+summary:focus,
+summary:focus-visible,
+summary:active,
+[role="button"]:focus,
+[role="button"]:focus-visible,
+[role="button"]:active,
+[tabindex]:focus,
+[tabindex]:focus-visible,
+[tabindex]:active,
+[onclick]:focus,
+[onclick]:focus-visible,
+[onclick]:active,
+.menu-toggle:focus,
+.menu-toggle:focus-visible,
+.menu-toggle:active,
+.slide-arrow:focus,
+.slide-arrow:focus-visible,
+.slide-arrow:active,
+.slide-arrow-left:focus,
+.slide-arrow-left:focus-visible,
+.slide-arrow-left:active,
+.catalog-arrow:focus,
+.catalog-arrow:focus-visible,
+.catalog-arrow:active,
+.catalog-arrow-left:focus,
+.catalog-arrow-left:focus-visible,
+.catalog-arrow-left:active,
+.catalog-book-link:focus,
+.catalog-book-link:focus-visible,
+.catalog-book-link:active,
+.catalog-title:focus,
+.catalog-title:focus-visible,
+.catalog-title:active,
+.catalog-card:focus,
+.catalog-card:focus-visible,
+.catalog-card:active,
+.product-slider:focus,
+.product-slider:focus-visible,
+.product-slider:active,
+.slide-card:focus,
+.slide-card:focus-visible,
+.slide-card:active,
+.text-card:focus,
+.text-card:focus-visible,
+.text-card:active,
+.text-post:focus,
+.text-post:focus-visible,
+.text-post:active,
+.journal-card:focus,
+.journal-card:focus-visible,
+.journal-card:active,
+.scrap-card:focus,
+.scrap-card:focus-visible,
+.scrap-card:active,
+.scrap-item:focus,
+.scrap-item:focus-visible,
+.scrap-item:active,
+.quote-card:focus,
+.quote-card:focus-visible,
+.quote-card:active {
+  outline: none;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  font: inherit;
+}
+
+.menu-toggle,
+.slide-arrow,
+.slide-arrow-left,
+.catalog-arrow,
+.catalog-arrow-left {
+  user-select: none;
+  -webkit-user-select: none;
+}
