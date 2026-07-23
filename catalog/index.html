@@ -130,20 +130,6 @@
       opacity: 0.5;
     }
 
-    @media (max-width: 820px) {
-      .catalog-section::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        width: 90px;
-        background: linear-gradient(to right, transparent, var(--bg) 80%);
-        pointer-events: none;
-        z-index: 2;
-      }
-    }
-
     @media (max-width: 599px) {
       .catalog-track {
         --catalog-book-height: clamp(440px, 64vh, 540px);
