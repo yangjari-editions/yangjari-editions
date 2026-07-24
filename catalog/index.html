@@ -132,11 +132,19 @@
 
     @media (max-width: 599px) {
       .catalog-track {
-        --catalog-book-height: clamp(440px, 64vh, 540px);
-        --catalog-book-width: calc(var(--catalog-book-height) * 110 / 195);
+        /* 필요하면 모바일 표지 크기는 72vw를 70vw 또는 74vw로만 조정한다. */
+        --catalog-book-width: clamp(245px, 72vw, 300px);
+        --catalog-book-height: calc(var(--catalog-book-width) * 195 / 110);
         --catalog-gap: 38px;
+        justify-content: flex-start;
         padding-left: max(4mm, calc((100vw - var(--catalog-book-width)) / 2));
         padding-right: max(4mm, calc((100vw - var(--catalog-book-width)) / 2));
+        touch-action: auto;
+      }
+
+      .catalog-book {
+        width: var(--catalog-book-width);
+        height: var(--catalog-book-height);
       }
     }
 
@@ -328,8 +336,6 @@
     });
 
     // 카탈로그 렌더링
-    const shouldLockCatalogBooks = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-
     (function () {
       const track = document.getElementById('catalog-track');
       CATALOG_POSTS.forEach(function (book) {
@@ -347,9 +353,6 @@
           '</a>';
         track.appendChild(card);
       });
-      if (shouldLockCatalogBooks) {
-        requestAnimationFrame(lockCatalogBookSize);
-      }
     })();
 
     setupCatalogArrows(
@@ -401,27 +404,6 @@
       setTimeout(updateCatalogArrows, 300);
     }
 
-    function lockCatalogBookSize() {
-      const books = document.querySelectorAll('.catalog-book');
-      books.forEach(function (book) {
-        book.style.height = '';
-        book.style.width = '';
-
-        const height = book.getBoundingClientRect().height;
-        if (!height) return;
-
-        const width = height * 110 / 195;
-        book.style.height = Math.round(height) + 'px';
-        book.style.width = Math.round(width) + 'px';
-      });
-    }
-
-    window.addEventListener('orientationchange', function () {
-      if (!shouldLockCatalogBooks) return;
-      setTimeout(function () {
-        requestAnimationFrame(lockCatalogBookSize);
-      }, 400);
-    });
   </script>
 
   <script>
