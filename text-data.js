@@ -10,6 +10,16 @@
 
 const TEXT_POSTS = [
   {
+    href:       "/text/celine_rousseaux/",
+    img:        "images/text/celine_rousseaux/celine_rousseaux_01.jpg",
+    alt:        "— 앙드레 루소에게 보내는 편지",
+    title:      "— 앙드레 루소에게 보내는 편지",
+    author:     "루이페르디낭 셀린",
+    translator: "표은선 번역",
+    date:       "2026년 8월 9일",
+    desc:       "앙드레 루소(André Rousseaux)에게 보내는 셀린의 편지"
+  },
+  {
     href:       "/text/gombrowicz/",
     img:        "images/text/gombrowicz/gombrowicz_main.jpg",
     alt:        "— 일기",
@@ -37,8 +47,7 @@ const TEXT_POSTS = [
     author:     "루이페르디낭 셀린",
     translator: "표은선 번역",
     date:       "2026년 5월 1일",
-    desc:       "『라블레, 그는 한 방을 놓쳤다 (Rabelais, il a raté son coup)』",
-    hidden:     true
+    desc:       "『라블레, 그는 한 방을 놓쳤다 (Rabelais, il a raté son coup)』"
   },
   {
     href:       "/text/cezanne_bernard/",
@@ -78,8 +87,7 @@ const TEXT_POSTS = [
     author:     "조리스카를 위스망스",
     translator: "표은선 번역",
     date:       "2026년 3월 15일",
-    desc:       "인터뷰, 『오늘의 사람들(Les hommes d'aujourd'hui)』, N°263, 1886년",
-    hidden:     true
+    desc:       "인터뷰, 『오늘의 사람들(Les hommes d'aujourd'hui)』, N°263, 1886년"
   },
   {
     href:       "/text/flaubert_lc/",
