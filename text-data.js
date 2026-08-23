@@ -91,6 +91,7 @@ const TEXT_POSTS = [
   },
   {
     href:       "/text/flaubert_lc/",
+    hidden:     true,
     img:        "images/text/flaubert_lc/text_04_main_0.webp",
     alt:        "— 루이즈 콜레에게 보내는 편지",
     title:      "— 루이즈 콜레에게 보내는 편지",
