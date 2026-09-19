@@ -975,7 +975,9 @@
     });
 
     // 저널 슬라이더 카드: journal-data.js 에서 동적으로 렌더링
-    JOURNAL_POSTS.forEach(function (post) {
+    JOURNAL_POSTS.filter(function (post) {
+      return post.hidden !== true;
+    }).forEach(function (post) {
       const card = document.createElement('div');
       card.className = 'slide-card';
       card.innerHTML =

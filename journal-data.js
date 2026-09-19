@@ -14,6 +14,7 @@ const JOURNAL_POSTS = [
     img:    "images/journal/day_01/text_pg_05.webp",
     title:  "이옥준: 침대에서 읽은 책",
     author: "",
-    date:   "2026년 3월 28일"
+    date:   "2026년 3월 28일",
+    hidden: true
   }
 ];

@@ -230,7 +230,9 @@
     // 저널 카드 렌더링
     (function () {
       const grid = document.getElementById('news-grid');
-      JOURNAL_POSTS.forEach(function (post) {
+      JOURNAL_POSTS.filter(function (post) {
+        return post.hidden !== true;
+      }).forEach(function (post) {
         grid.insertAdjacentHTML('beforeend',
           '<a class="news-card" href="' + post.href + '">' +
             '<div class="news-card-img">' +
