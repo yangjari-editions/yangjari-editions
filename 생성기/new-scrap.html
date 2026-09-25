@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script>document.documentElement.classList.add('fonts-loading');</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>스크랩 생성기 — 양자리출판사</title>
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="stylesheet" href="../common.css">
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100dvh; }
+
+    .gen-topbar {
+      height: 52px; display: flex; align-items: center;
+      padding: 0 4mm; border-bottom: 1px solid var(--rule);
+      font-size: 18px; flex-shrink: 0; gap: 12px;
+    }
+    .gen-topbar a { color: inherit; text-decoration: none; }
+    .gen-topbar .sep { color: var(--rule); }
+
+    .gen-folder-btn {
+      margin-left: auto; padding: 6px 14px;
+      border: 1px solid var(--rule); background: none;
+      font-family: var(--ui-font); font-size: 14px;
+      color: var(--text); cursor: pointer; white-space: nowrap;
+    }
+    .gen-folder-btn:hover { background: var(--text); color: white; border-color: var(--text); }
+    .gen-folder-btn.ready { border-color: var(--text); background: var(--text); color: white; }
+
+    .gen-folder-status {
+      font-size: 13px; color: var(--rule);
+      white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis; max-width: 200px;
+    }
+
+    .gen-layout {
+      display: grid; grid-template-columns: 1fr 400px;
+      flex: 1; min-height: 0;
+    }
+
+    .gen-panel { padding: 28px; overflow-y: auto; border-right: 1px solid var(--rule); }
+    .gen-side {
+      padding: 28px; overflow-y: auto; background: #e8e8e8;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .gen-section { margin-bottom: 32px; }
+    .gen-section-title {
+      font-size: 12px; color: var(--rule);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px;
+    }
+
+    .gen-field { margin-bottom: 10px; }
+    .gen-label { font-size: 13px; color: var(--rule); margin-bottom: 4px; display: block; }
+
+    .gen-input-sm {
+      background: none; border: none;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--ui-font); font-size: 15px;
+      color: var(--text); padding: 3px 0; outline: none; letter-spacing: -0.01em;
+    }
+    .gen-input-sm:focus { border-bottom-color: var(--text); }
+    .gen-input-full { width: 100%; }
+
+    .gen-btn-sm {
+      background: none; border: 1px solid var(--rule);
+      cursor: pointer; padding: 2px 8px;
+      font-family: var(--ui-font); font-size: 12px; color: var(--text);
+    }
+    .gen-btn-sm:hover { background: var(--text); color: white; border-color: var(--text); }
+    .gen-btn-sm--del:hover { background: #c0392b; border-color: #c0392b; }
+
+    .gen-add-btn {
+      padding: 7px 14px; border: 1px dashed var(--rule);
+      background: none; font-family: var(--ui-font);
+      font-size: 14px; color: var(--rule); cursor: pointer;
+    }
+    .gen-add-btn:hover { border-color: var(--text); color: var(--text); background: white; }
+
+    .gen-img-row { display: flex; gap: 6px; align-items: center; }
+    .gen-img-row .gen-input-sm { flex: 1; }
+
+    .gen-browse-btn {
+      flex-shrink: 0; padding: 4px 10px; background: none;
+      border: 1px solid var(--rule); font-family: var(--ui-font);
+      font-size: 13px; color: var(--text); cursor: pointer; white-space: nowrap;
+    }
+    .gen-browse-btn:hover { background: var(--text); color: white; border-color: var(--text); }
+
+    .gen-img-preview { width: 80px; height: 54px; object-fit: cover; display: none; margin-top: 8px; }
+
+    /* ── Row 블록 ── */
+    .gen-rows { display: flex; flex-direction: column; gap: 16px; }
+
+    .gen-row-block {
+      border: 1px solid var(--rule); padding: 14px; background: white;
+    }
+
+    .gen-row-header {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+
+    .gen-row-label {
+      font-size: 11px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--rule); flex: 1;
+    }
+
+    .gen-row-meta {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+    }
+    .gen-row-meta label { font-size: 13px; color: var(--rule); white-space: nowrap; }
+    .gen-row-meta .gen-input-sm { width: 60px; }
+    .gen-row-meta span { font-size: 12px; color: var(--rule); }
+
+    /* ── 아이템 ── */
+    .gen-items { display: flex; flex-direction: column; gap: 10px; }
+
+    .gen-item {
+      border: 1px dashed var(--rule); padding: 10px; background: #f5f5f5;
+    }
+
+    .gen-item-header {
+      display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+    }
+    .gen-item-label { font-size: 11px; color: var(--rule); flex: 1; }
+
+    .gen-item-meta {
+      display: flex; align-items: center; gap: 10px; margin-top: 8px;
+    }
+    .gen-item-meta label { font-size: 12px; color: var(--rule); white-space: nowrap; }
+    .gen-item-meta .gen-input-sm { width: 60px; }
+
+    /* 출력 */
+    .gen-save-btn {
+      width: 100%; padding: 13px; background: var(--text);
+      color: white; border: none; font-family: var(--ui-font);
+      font-size: 17px; cursor: pointer; letter-spacing: -0.01em;
+    }
+    .gen-save-btn:hover { opacity: 0.75; }
+
+    .gen-generate-btn {
+      width: 100%; padding: 10px; background: none;
+      border: 1px solid var(--text); font-family: var(--ui-font);
+      font-size: 15px; cursor: pointer; color: var(--text); letter-spacing: -0.01em;
+    }
+    .gen-generate-btn:hover { background: var(--text); color: white; }
+
+    .gen-copy-btn {
+      width: 100%; padding: 10px; background: none;
+      border: 1px solid var(--rule); font-family: var(--ui-font);
+      font-size: 14px; cursor: pointer; color: var(--rule); letter-spacing: -0.01em;
+    }
+    .gen-copy-btn:hover { background: var(--rule); color: white; }
+
+    .gen-log {
+      font-size: 13px; line-height: 1.8; color: var(--rule);
+      padding: 10px; background: #d8d8d8; min-height: 60px;
+    }
+    .gen-log .ok { color: #2d7a2d; }
+    .gen-log .err { color: #c0392b; }
+
+    .gen-code {
+      flex: 1; min-height: 200px; width: 100%;
+      background: #1c1c1c; color: #d4d4d4; border: none;
+      font-family: 'Courier New', monospace; font-size: 11.5px;
+      padding: 12px; resize: none; outline: none; line-height: 1.55;
+    }
+
+    .gen-divider { border: none; border-top: 1px solid var(--rule); margin: 0; }
+  </style>
+</head>
+<body>
+
+  <div class="gen-topbar">
+    <a href="/">양자리출판사</a>
+    <span class="sep">/</span>
+    <span>스크랩 생성기</span>
+    <span class="gen-folder-status" id="folder-status">폴더 미선택</span>
+    <button class="gen-folder-btn" style="margin-left:auto;" onclick="loadFile()">불러오기</button>
+    <button class="gen-folder-btn" id="folder-btn" style="margin-left:0;" onclick="selectFolder()">프로젝트 폴더 선택</button>
+  </div>
+
+  <div class="gen-layout">
+
+    <div class="gen-panel">
+      <div class="gen-section">
+        <div class="gen-section-title">Row 목록</div>
+        <div class="gen-rows" id="rows-container"></div>
+        <div style="margin-top:14px;">
+          <button class="gen-add-btn" onclick="addRow()">+ Row 추가</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gen-side">
+      <button class="gen-save-btn" onclick="saveFile()">저장하기</button>
+      <hr class="gen-divider">
+      <button class="gen-generate-btn" onclick="previewGenerate()">HTML만 미리보기</button>
+      <button class="gen-copy-btn" id="copy-btn" onclick="copyCode()">복사</button>
+      <div class="gen-log" id="gen-log">폴더를 선택하면 저장하기로<br>scrap-data.js가 업데이트됩니다.</div>
+      <textarea class="gen-code" id="output-code" readonly></textarea>
+    </div>
+
+  </div>
+
+  <script>
+    let rows = [];
+    let nextRowId = 0;
+    let nextItemId = 0;
+    let dirHandle = null;
+
+    function esc(s) {
+      return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function log(msg) { document.getElementById('gen-log').innerHTML = msg; }
+
+    // ── 데이터 ──
+    function addRow(width, items, gap) {
+      rows.push({ id: nextRowId++, width: width||'80', gap: gap||'20', items: items||[] });
+      renderRows();
+    }
+
+    function removeRow(id) {
+      rows = rows.filter(r => r.id !== id);
+      renderRows();
+    }
+
+    function moveRow(id, dir) {
+      const i = rows.findIndex(r => r.id === id);
+      const j = i + dir;
+      if (j < 0 || j >= rows.length) return;
+      [rows[i], rows[j]] = [rows[j], rows[i]];
+      renderRows();
+    }
+
+    function syncRow(id, key, el) {
+      const r = rows.find(r => r.id === id);
+      if (r) r[key] = el.value;
+    }
+
+    function addItem(rowId) {
+      const r = rows.find(r => r.id === rowId);
+      if (!r) return;
+      r.items.push({ id: nextItemId++, width: '50', src: '', caption: '', preview: '' });
+      renderRows();
+    }
+
+    function removeItem(rowId, itemId) {
+      const r = rows.find(r => r.id === rowId);
+      if (r) r.items = r.items.filter(it => it.id !== itemId);
+      renderRows();
+    }
+
+    function moveItem(rowId, itemId, dir) {
+      const r = rows.find(r => r.id === rowId);
+      if (!r) return;
+      const i = r.items.findIndex(it => it.id === itemId);
+      const j = i + dir;
+      if (j < 0 || j >= r.items.length) return;
+      [r.items[i], r.items[j]] = [r.items[j], r.items[i]];
+      renderRows();
+    }
+
+    function syncItem(rowId, itemId, key, el) {
+      const r = rows.find(r => r.id === rowId);
+      if (!r) return;
+      const it = r.items.find(it => it.id === itemId);
+      if (it) it[key] = el.value;
+    }
+
+    // ── 렌더 ──
+    function renderRows() {
+      const c = document.getElementById('rows-container');
+      c.innerHTML = rows.map((r, ri) => {
+        const itemsHtml = r.items.map((it, ii) => {
+          const p = it.preview ? 'display:block;' : 'display:none;';
+          return `
+          <div class="gen-item">
+            <div class="gen-item-header">
+              <span class="gen-item-label">아이템 ${ii+1}</span>
+              <button class="gen-btn-sm" onclick="moveItem(${r.id},${it.id},-1)">↑</button>
+              <button class="gen-btn-sm" onclick="moveItem(${r.id},${it.id},1)">↓</button>
+              <button class="gen-btn-sm gen-btn-sm--del" onclick="removeItem(${r.id},${it.id})">삭제</button>
+            </div>
+            <div class="gen-field">
+              <label class="gen-label">이미지</label>
+              <div class="gen-img-row">
+                <input class="gen-input-sm" id="item-src-${it.id}" type="text" value="${esc(it.src)}"
+                  placeholder="images/scrap/파일명.webp"
+                  oninput="syncItem(${r.id},${it.id},'src',this)" />
+                <button class="gen-browse-btn" onclick="pickImage(${r.id},${it.id})">찾아보기</button>
+              </div>
+              <img class="gen-img-preview" id="item-prev-${it.id}" src="${esc(it.preview)}" style="${p}" />
+            </div>
+            <div class="gen-field">
+              <label class="gen-label">캡션</label>
+              <input class="gen-input-sm gen-input-full" type="text" value="${esc(it.caption)}"
+                placeholder="알랭 파카디 — 『세련된 젊은 남자』"
+                oninput="syncItem(${r.id},${it.id},'caption',this)" />
+            </div>
+            <div class="gen-item-meta">
+              <label>너비 %</label>
+              <input class="gen-input-sm" type="text" value="${esc(it.width)}"
+                oninput="syncItem(${r.id},${it.id},'width',this)" />
+              <span style="font-size:11px;color:var(--rule);">row 안에서 이 아이템의 너비</span>
+            </div>
+          </div>`;
+        }).join('');
+
+        return `
+        <div class="gen-row-block">
+          <div class="gen-row-header">
+            <span class="gen-row-label">Row ${ri+1}</span>
+            <div style="display:flex;gap:4px;">
+              <button class="gen-btn-sm" onclick="moveRow(${r.id},-1)">↑</button>
+              <button class="gen-btn-sm" onclick="moveRow(${r.id},1)">↓</button>
+              <button class="gen-btn-sm gen-btn-sm--del" onclick="removeRow(${r.id})">삭제</button>
+            </div>
+          </div>
+          <div class="gen-row-meta">
+            <label>Row 너비 %</label>
+            <input class="gen-input-sm" type="text" value="${esc(r.width)}"
+              oninput="syncRow(${r.id},'width',this)" />
+            <span>(클수록 양쪽 여백 좁아짐)</span>
+            <label style="margin-left:12px;">사진 간격 px</label>
+            <input class="gen-input-sm" type="text" value="${esc(r.gap||'20')}" style="width:40px;"
+              oninput="syncRow(${r.id},'gap',this)" />
+          </div>
+          <div class="gen-items">${itemsHtml}</div>
+          <div style="margin-top:10px;">
+            <button class="gen-add-btn" onclick="addItem(${r.id})">+ 아이템 추가</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // ── 이미지 피커 ──
+    let _pickerRowId = null, _pickerItemId = null;
+    const _fi = document.createElement('input');
+    _fi.type = 'file'; _fi.accept = 'image/*'; _fi.style.display = 'none';
+    document.body.appendChild(_fi);
+
+    _fi.addEventListener('change', async () => {
+      if (!_fi.files[0]) return;
+      const file = _fi.files[0];
+      const r = rows.find(r => r.id === _pickerRowId);
+      if (!r) return;
+      const it = r.items.find(it => it.id === _pickerItemId);
+      if (!it) return;
+
+      // 미리보기
+      const url = URL.createObjectURL(file);
+      const prev = document.getElementById('item-prev-' + it.id);
+      if (prev) { prev.src = url; prev.style.display = 'block'; }
+      it.preview = url;
+
+      // 경로 설정
+      const path = 'images/scrap/' + file.name;
+      it.src = path;
+      const input = document.getElementById('item-src-' + it.id);
+      if (input) input.value = path;
+
+      // 폴더 있으면 복사
+      if (dirHandle) {
+        try {
+          const imagesDir = await dirHandle.getDirectoryHandle('images', { create: true });
+          const scrapDir  = await imagesDir.getDirectoryHandle('scrap',  { create: true });
+          const fh = await scrapDir.getFileHandle(file.name, { create: true });
+          const w  = await fh.createWritable();
+          await w.write(await file.arrayBuffer());
+          await w.close();
+          log('이미지 복사됨: ' + path);
+        } catch(e) { log('경로 설정됨: ' + path); }
+      } else {
+        log('경로 설정됨: ' + path);
+      }
+      _fi.value = '';
+    });
+
+    function pickImage(rowId, itemId) {
+      _pickerRowId = rowId;
+      _pickerItemId = itemId;
+      _fi.click();
+    }
+
+    // ── 폴더 선택 ──
+    async function selectFolder() {
+      try {
+        dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        document.getElementById('folder-status').textContent = dirHandle.name;
+        document.getElementById('folder-btn').classList.add('ready');
+        document.getElementById('folder-btn').textContent = '폴더 변경';
+        log('📁 ' + dirHandle.name + ' 폴더 선택됨');
+      } catch(e) {
+        if (e.name !== 'AbortError') log('<span class="err">폴더 선택 실패: ' + e.message + '</span>');
+      }
+    }
+
+    // ── 불러오기 ──
+    async function loadFile() {
+      if (!dirHandle) { log('<span class="err">먼저 프로젝트 폴더를 선택해주세요.</span>'); return; }
+      try {
+        const fh = await dirHandle.getFileHandle('scrap-data.js');
+        const file = await fh.getFile();
+        const text = await file.text();
+        const match = text.match(/const SCRAP_ITEMS\s*=\s*(\[[\s\S]*?\]);/);
+        if (!match) { log('<span class="err">SCRAP_ITEMS를 찾을 수 없습니다.</span>'); return; }
+        const items = eval(match[1]);
+
+        rows = []; nextRowId = 0; nextItemId = 0;
+
+        // 2개씩 묶어서 row로 복원
+        for (let i = 0; i < items.length; i += 2) {
+          const rowItems = [];
+          [items[i], items[i+1]].forEach(it => {
+            if (!it) return;
+            const w = it.width ? it.width.replace('%','') : '45';
+            rowItems.push({ id: nextItemId++, width: w, src: it.img||'', caption: it.title||'', preview: '' });
+          });
+          rows.push({ id: nextRowId++, width: '80', gap: '20', items: rowItems });
+        }
+
+        renderRows();
+        log('<span class="ok">✓ scrap-data.js 불러옴 — ' + items.length + '개 아이템</span>');
+      } catch(e) {
+        log('<span class="err">불러오기 실패: ' + e.message + '</span>');
+      }
+    }
+
+    // ── scrap-data.js 내용 생성 ──
+    function generateScrapData() {
+      const allItems = [];
+      rows.forEach(r => {
+        r.items.forEach(it => {
+          allItems.push({ img: it.src||'', alt: it.caption||'', title: it.caption||'', width: (it.width||'45') + '%', gap: r.gap||'20' });
+        });
+      });
+      const postsStr = allItems.map(it =>
+        `  { img: "${it.img.replace(/"/g,'\\"')}", alt: "${it.alt.replace(/"/g,'\\"')}", title: "${it.title.replace(/"/g,'\\"')}", width: "${it.width}", gap: "${it.gap}" }`
+      ).join(',\n');
+      return `// ── 스크랩 데이터 ──\n// 새 아이템을 추가할 때 배열 맨 앞에 객체를 추가하세요.\n// scrap/index.html: 24개씩 페이지네이션 / index.html: 최신 16개만 표시\n\nconst SCRAP_ITEMS = [\n${postsStr}\n];\n`;
+    }
+
+    // ── HTML 미리보기용 (기존 유지) ──
+    function generateScrapHTML() {
+      return rows.map(r => {
+        const itemsHtml = r.items.map(it => {
+          const imgHtml = it.src
+            ? `\n          <img class="scrap-img" src="${esc(it.src)}" alt="${esc(it.caption)}">`
+            : `\n          <div class="scrap-img" style="background:#d0cfc9; aspect-ratio:4/3;"></div>`;
+          const captionHtml = it.caption
+            ? `\n          <p class="scrap-title">${esc(it.caption)}</p>` : '';
+          return `
+        <div class="scrap-item" style="width: ${esc(it.width)}%;">${imgHtml}${captionHtml}
+        </div>`;
+        }).join('');
+        return `
+      <div class="scrap-row" style="width: ${esc(r.width)}%; margin: 0 auto; gap: ${esc(r.gap||'20')}px;">${itemsHtml}
+      </div>`;
+      }).join('\n');
+    }
+
+    // ── 저장 ──
+    async function saveFile() {
+      if (!dirHandle) { log('<span class="err">먼저 프로젝트 폴더를 선택해주세요.</span>'); return; }
+      log('저장 중...');
+      try {
+        const fh = await dirHandle.getFileHandle('scrap-data.js', { create: true });
+        const w = await fh.createWritable();
+        await w.write(generateScrapData());
+        await w.close();
+        const total = rows.reduce((s, r) => s + r.items.length, 0);
+        log('<span class="ok">✓ scrap-data.js 저장 완료 (' + total + '개) 🎉</span>');
+      } catch(e) {
+        log('<span class="err">오류: ' + e.message + '</span>');
+      }
+    }
+
+    function previewGenerate() {
+      document.getElementById('output-code').value = generateScrapHTML();
+    }
+
+    function copyCode() {
+      const ta = document.getElementById('output-code');
+      if (!ta.value) return;
+      navigator.clipboard.writeText(ta.value).catch(() => { ta.select(); document.execCommand('copy'); });
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = '복사됨 ✓';
+      setTimeout(() => { btn.textContent = '복사'; }, 2000);
+    }
+
+    // 기본 Row 1개
+    addRow('80', [
+      { id: nextItemId++, width: '62', src: '', caption: '', preview: '' },
+      { id: nextItemId++, width: '32', src: '', caption: '', preview: '' }
+    ]);
+
+  </script>
+
+  <script>
+    (function () {
+      const html = document.documentElement; let revealed = false;
+      function reveal() { if (revealed) return; revealed = true; html.classList.remove('fonts-loading'); html.classList.add('fonts-ready'); }
+      const t = setTimeout(reveal, 3000);
+      Promise.all([document.fonts.load('400 1em "GothicA1"'), document.fonts.ready])
+        .then(() => { clearTimeout(t); requestAnimationFrame(reveal); }).catch(() => { clearTimeout(t); reveal(); });
+    })();
+  </script>
+
+</body>
+</html>
