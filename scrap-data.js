@@ -4,7 +4,7 @@
 
 const SCRAP_ITEMS = [
   { img: "images/scrap/260327_sr_01.webp", alt: "브뤼노 몽생종, 리흐테르, 정원출판사, 2005", title: "브뤼노 몽생종, 리흐테르, 정원출판사, 2005", width: "40%", gap: "20" },
-  { img: "images/scrap/journal.jpg", alt: "비톨드 곰브로비치, 일기, 2권, 갈리마르, 1995", title: "비톨드 곰브로비치, 일기, 2권, 갈리마르, 1995", width: "25%", gap: "20" },
+  { img: "images/scrap/sound.jpg", alt: "비톨드 곰브로비치, 일기, 2권, 갈리마르, 1995", title: "비톨드 곰브로비치, 일기, 2권, 갈리마르, 1995", width: "25%", gap: "20" },
   { img: "images/scrap/9791141601560.jpg", alt: "앙리 바르뷔스, 포화, 문학동네, 2024", title: "앙리 바르뷔스, 포화, 문학동네, 2024", width: "25%", gap: "20" },
   { img: "images/scrap/51m-ZRweCmL.jpg", alt: "장 에슈노즈, 제롬 랭동, 미뉘, 2001", title: "장 에슈노즈, 제롬 랭동, 미뉘, 2001", width: "40%", gap: "20" },
   { img: "images/scrap/couv_pacadis_jeune_homme.jpg", alt: "알랭 파카디, 세련된 젊은이, 에로-리미트, 2018", title: "알랭 파카디, 세련된 젊은이, 에로-리미트, 2018", width: "40%", gap: "20" },
