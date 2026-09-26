@@ -390,7 +390,7 @@
             <label class="gen-label">오디오 파일 (sound 상세 기준 경로)</label>
             <div class="gen-img-row">
               <input class="gen-input" id="audio-src-${b.id}" type="text" value="${esc(b.data.src||'')}"
-                placeholder="../audio/artaud/Artaud_Riviere _F2.mp3"
+                placeholder="../audio/Artaud_Riviere _F2.mp3"
                 oninput="syncBlock(${b.id},'src',this)" />
               <button class="gen-browse-btn" onclick="pickAudio(${b.id})">찾아보기</button>
             </div>
@@ -507,7 +507,7 @@
 
       const slug = v('meta-filename').replace(/\.html$/i, '') || 'day';
       const fileName = normalizeAudioFileName(file.name);
-      let path = '../audio/' + slug + '/' + fileName;
+      let path = '../audio/' + fileName;
 
       if (dirHandle) {
         try {
