@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script>document.documentElement.classList.add('fonts-loading');</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>사운드 생성기 — 양자리출판사</title>
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="stylesheet" href="/assets/css/common.css">
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100dvh; }
+
+    .gen-topbar {
+      height: 52px; display: flex; align-items: center;
+      padding: 0 4mm; border-bottom: 1px solid var(--rule);
+      font-size: 18px; flex-shrink: 0; gap: 12px;
+    }
+    .gen-topbar a { color: inherit; text-decoration: none; }
+    .gen-topbar .sep { color: var(--rule); }
+
+    .gen-folder-btn {
+      margin-left: auto; padding: 6px 14px;
+      border: 1px solid var(--rule); background: none;
+      font-family: var(--ui-font); font-size: 14px;
+      color: var(--text); cursor: pointer; white-space: nowrap;
+    }
+    .gen-folder-btn:hover { background: var(--text); color: white; border-color: var(--text); }
+    .gen-folder-btn.ready { border-color: var(--text); background: var(--text); color: white; }
+
+    .gen-folder-status {
+      font-size: 13px; color: var(--rule);
+      white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis; max-width: 200px;
+    }
+
+    .gen-layout {
+      display: grid; grid-template-columns: 1fr 400px;
+      flex: 1; min-height: 0;
+    }
+
+    .gen-panel { padding: 28px; overflow-y: auto; border-right: 1px solid var(--rule); }
+
+    .gen-side {
+      padding: 28px; overflow-y: auto; background: #e8e8e8;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .gen-section { margin-bottom: 32px; }
+
+    .gen-section-title {
+      font-size: 12px; color: var(--rule);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px;
+    }
+
+    .gen-field { margin-bottom: 12px; }
+
+    .gen-label { font-size: 13px; color: var(--rule); margin-bottom: 4px; display: block; }
+
+    .gen-input {
+      width: 100%; background: none; border: none;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--ui-font); font-size: 17px;
+      color: var(--text); padding: 4px 0; outline: none; letter-spacing: -0.01em;
+    }
+    .gen-input:focus { border-bottom-color: var(--text); }
+
+    .gen-textarea {
+      width: 100%; background: white; border: 1px solid var(--rule);
+      font-family: var(--ui-font); font-size: 15px; color: var(--text);
+      padding: 10px; outline: none; letter-spacing: -0.01em;
+      resize: vertical; min-height: 80px; line-height: 1.7;
+    }
+    .gen-textarea:focus { border-color: var(--text); }
+
+    /* ── 슬라이드 블록 ── */
+    .gen-blocks { display: flex; flex-direction: column; gap: 10px; }
+
+    .gen-block { border: 1px solid var(--rule); padding: 14px; background: white; }
+
+    .gen-block-header {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+
+    .gen-block-type {
+      font-size: 11px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--rule); flex: 1;
+    }
+
+    .gen-block-actions { display: flex; gap: 4px; }
+
+    .gen-btn-sm {
+      background: none; border: 1px solid var(--rule);
+      cursor: pointer; padding: 2px 8px;
+      font-family: var(--ui-font); font-size: 12px; color: var(--text);
+    }
+    .gen-btn-sm:hover { background: var(--text); color: white; border-color: var(--text); }
+    .gen-btn-sm--del:hover { background: #c0392b; border-color: #c0392b; }
+
+    .gen-add-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+    .gen-add-btn {
+      padding: 8px 14px; border: 1px dashed var(--rule);
+      background: none; font-family: var(--ui-font);
+      font-size: 14px; color: var(--rule); cursor: pointer;
+    }
+    .gen-add-btn:hover { border-color: var(--text); color: var(--text); background: white; }
+
+    .gen-img-row { display: flex; gap: 6px; align-items: center; }
+    .gen-img-row .gen-input { flex: 1; }
+
+    .gen-browse-btn {
+      flex-shrink: 0; padding: 4px 10px; background: none;
+      border: 1px solid var(--rule); font-family: var(--ui-font);
+      font-size: 13px; color: var(--text); cursor: pointer; white-space: nowrap;
+    }
+    .gen-browse-btn:hover { background: var(--text); color: white; border-color: var(--text); }
+
+    .gen-img-preview { width: 80px; height: 54px; object-fit: cover; display: none; margin-top: 8px; }
+
+    /* ── 출력 패널 ── */
+    .gen-save-btn {
+      width: 100%; padding: 13px; background: var(--text);
+      color: white; border: none; font-family: var(--ui-font);
+      font-size: 17px; cursor: pointer; letter-spacing: -0.01em;
+    }
+    .gen-save-btn:hover { opacity: 0.75; }
+    .gen-save-btn:disabled { opacity: 0.35; cursor: default; }
+
+    .gen-generate-btn {
+      width: 100%; padding: 10px; background: none;
+      border: 1px solid var(--text); font-family: var(--ui-font);
+      font-size: 15px; cursor: pointer; color: var(--text); letter-spacing: -0.01em;
+    }
+    .gen-generate-btn:hover { background: var(--text); color: white; }
+
+    .gen-copy-btn {
+      width: 100%; padding: 10px; background: none;
+      border: 1px solid var(--rule); font-family: var(--ui-font);
+      font-size: 14px; cursor: pointer; color: var(--rule); letter-spacing: -0.01em;
+    }
+    .gen-copy-btn:hover { background: var(--rule); color: white; }
+
+    .gen-log {
+      font-size: 13px; line-height: 1.8; color: var(--rule);
+      padding: 10px; background: #d8d8d8; min-height: 60px;
+    }
+    .gen-log .ok { color: #2d7a2d; }
+    .gen-log .err { color: #c0392b; }
+
+    .gen-code {
+      flex: 1; min-height: 200px; width: 100%;
+      background: #1c1c1c; color: #d4d4d4; border: none;
+      font-family: 'Courier New', monospace; font-size: 11.5px;
+      padding: 12px; resize: none; outline: none; line-height: 1.55;
+    }
+
+    .gen-divider { border: none; border-top: 1px solid var(--rule); margin: 0; }
+
+    /* 블록 타입 뱃지 색상 */
+    .gen-block--image .gen-block-type { color: #2d7a2d; }
+    .gen-block--text  .gen-block-type { color: #2255aa; }
+    .gen-block--audio .gen-block-type { color: #8a4d14; }
+  </style>
+</head>
+<body>
+
+  <div class="gen-topbar">
+    <a href="/">양자리출판사</a>
+    <span class="sep">/</span>
+    <span>사운드 생성기</span>
+    <span class="gen-folder-status" id="folder-status">폴더 미선택</span>
+    <button class="gen-folder-btn" style="margin-left:auto;" onclick="loadFile()">불러오기</button>
+    <button class="gen-folder-btn" id="folder-btn" style="margin-left:0;" onclick="selectFolder()">프로젝트 폴더 선택</button>
+  </div>
+
+  <div class="gen-layout">
+
+    <!-- 빌더 -->
+    <div class="gen-panel">
+
+      <div class="gen-section">
+        <div class="gen-section-title">파일 정보</div>
+        <div class="gen-field">
+          <label class="gen-label">파일명 (sound/<slug>/index.html 로 저장)</label>
+          <input class="gen-input" id="meta-filename" type="text" placeholder="260328_day.html" />
+        </div>
+        <div class="gen-field">
+          <label class="gen-label">페이지 제목 (브라우저 탭)</label>
+          <input class="gen-input" id="meta-title" type="text" placeholder="2026년 3월 28일 — 양자리출판사" />
+        </div>
+        <div class="gen-field">
+          <label class="gen-label">설명 (meta description)</label>
+          <input class="gen-input" id="meta-desc" type="text" placeholder="" />
+        </div>
+      </div>
+
+      <div class="gen-section">
+        <div class="gen-section-title">목록 카드 (sound/index.html 자동 업데이트)</div>
+        <div class="gen-field">
+          <label class="gen-label">썸네일 이미지 (루트 기준 경로)</label>
+          <div class="gen-img-row">
+            <input class="gen-input" id="card-img" type="text" placeholder="images/sound/day_01/thumb.webp" />
+            <button class="gen-browse-btn" onclick="pickCardImage()">찾아보기</button>
+          </div>
+          <img class="gen-img-preview" id="card-img-preview" />
+        </div>
+        <div class="gen-field">
+          <label class="gen-label">카드 제목 (비우면 페이지 제목 사용)</label>
+          <input class="gen-input" id="card-title" type="text" placeholder="" />
+        </div>
+        <div class="gen-field">
+          <label class="gen-label">저자명 (비우면 표시 안 됨)</label>
+          <input class="gen-input" id="card-author" type="text" placeholder="" />
+        </div>
+        <div class="gen-field">
+          <label class="gen-label">날짜</label>
+          <input class="gen-input" id="card-date" type="text" placeholder="2026년 3월 28일" />
+        </div>
+      </div>
+
+      <div class="gen-section">
+        <div class="gen-section-title">슬라이드</div>
+        <div class="gen-blocks" id="blocks-container"></div>
+        <div class="gen-add-btns">
+          <button class="gen-add-btn" onclick="addBlock('image')">+ 이미지</button>
+          <button class="gen-add-btn" onclick="addBlock('text')">+ 텍스트</button>
+          <button class="gen-add-btn" onclick="addBlock('audio')">+ 오디오</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 출력 -->
+    <div class="gen-side">
+      <button class="gen-save-btn" id="save-btn" onclick="saveFile()">저장하기</button>
+      <button class="gen-save-btn" style="background:#c0392b;" onclick="deletePost()">카드 삭제</button>
+      <hr class="gen-divider">
+      <button class="gen-generate-btn" onclick="previewGenerate()">HTML만 미리보기</button>
+      <button class="gen-copy-btn" id="copy-btn" onclick="copyCode()">복사</button>
+      <div class="gen-log" id="gen-log">폴더를 선택하면 저장하기 버튼으로<br>파일이 자동 생성됩니다.</div>
+      <textarea class="gen-code" id="output-code" readonly placeholder="'HTML만 미리보기' 버튼을 누르면 여기에 코드가 나옵니다."></textarea>
+    </div>
+
+  </div>
+
+  <script>
+    let blocks = [];
+    let nextId = 0;
+    let dirHandle = null;
+
+    function v(id) { return document.getElementById(id).value.trim(); }
+    function slugFromFilename(filename) { return (filename || '').replace(/\.html$/i, '').trim(); }
+    function sourceFilenameFromDoc(doc, fallback) {
+      const meta = doc.querySelector('meta[name="source-filename"]');
+      return meta && meta.content ? meta.content.trim() : fallback;
+    }
+    function sanitizeImageFileName(name) {
+      const cleaned = (name || '').trim().replace(/\s+(\.[^./\s]+)$/i, '$1');
+      const match = cleaned.match(/^(.*?)(\.[^.]*)$/);
+      const rawBase = match ? match[1] : cleaned;
+      const ext = match ? match[2].trim() : '';
+      const base = rawBase
+        .trim()
+        .replace(/[()\[\]{}]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/[^A-Za-z0-9._-]+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/_+/g, '_')
+        .replace(/^[._-]+|[._-]+$/g, '') || 'image';
+      return base + ext;
+    }
+
+    function normalizeAudioFileName(name) {
+      return (name || '').trim().replace(/\s+(\.[^./\s]+)$/i, '$1');
+    }
+
+    function cleanImagePath(path) {
+      let value = (path || '').trim();
+      if (!value || /^(blob:|data:|https?:|file:)/i.test(value)) return value;
+      value = value
+        .replace(/^\.\.\/images\/news\//, '../images/sound/')
+        .replace(/^\.\/images\/news\//, './images/sound/')
+        .replace(/^\/images\/news\//, '/images/sound/')
+        .replace(/^images\/news\//, 'images/sound/');
+      const parts = value.split('/');
+      const filename = parts.pop();
+      if (!filename) return value;
+      const safeName = sanitizeImageFileName(filename);
+      if (!parts.length) return safeName;
+      return parts.map(part => part.trim()).join('/') + '/' + safeName;
+    }
+
+    function toPreviewURL(path) {
+      const value = cleanImagePath(path);
+      if (!value) return '';
+      if (/^(blob:|data:|https?:|file:)/i.test(value)) return value;
+      if (value.startsWith('/') || value.startsWith('../') || value.startsWith('./')) return value;
+      if (value.startsWith('images/')) return '../' + value;
+      return value;
+    }
+    function syncPreviewFromInput(inputId, previewId) {
+      const input = document.getElementById(inputId);
+      const preview = document.getElementById(previewId);
+      if (!input || !preview) return;
+      const url = toPreviewURL(input.value);
+      preview.src = url;
+      preview.style.display = url ? 'block' : 'none';
+    }
+
+    function log(msg) { document.getElementById('gen-log').innerHTML = msg; }
+
+    function esc(s) {
+      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── 블록 추가 ──
+    function addBlock(type, data = {}) {
+      const id = nextId++;
+      if (type === 'image') {
+        blocks.push({ id, type, data: { src: data.src||'', caption: data.caption||'', preview: data.preview||'', alt: data.alt||'' }});
+      } else if (type === 'text') {
+        blocks.push({ id, type, data: { text: data.text||'', fontSize: data.fontSize||'18', caption: data.caption||'' }});
+      } else if (type === 'audio') {
+        blocks.push({ id, type, data: { src: data.src||'', caption: data.caption||'', desc: data.desc||'' }});
+      }
+      renderBlocks();
+    }
+
+    function removeBlock(id) {
+      blocks = blocks.filter(b => b.id !== id);
+      renderBlocks();
+    }
+
+    function moveBlock(id, dir) {
+      const i = blocks.findIndex(b => b.id === id);
+      const j = i + dir;
+      if (j < 0 || j >= blocks.length) return;
+      [blocks[i], blocks[j]] = [blocks[j], blocks[i]];
+      renderBlocks();
+    }
+
+    function syncBlock(id, key, el) {
+      const b = blocks.find(b => b.id === id);
+      if (b) b.data[key] = el.value;
+    }
+
+    function renderBlocks() {
+      const c = document.getElementById('blocks-container');
+      c.innerHTML = blocks.map(b => {
+        const typeLabel = b.type === 'image' ? '이미지' : b.type === 'audio' ? '오디오' : '텍스트';
+        const hdr = `
+        <div class="gen-block gen-block--${b.type}" id="block-${b.id}">
+          <div class="gen-block-header">
+            <span class="gen-block-type">${typeLabel}</span>
+            <div class="gen-block-actions">
+              <button class="gen-btn-sm" onclick="moveBlock(${b.id},-1)">↑</button>
+              <button class="gen-btn-sm" onclick="moveBlock(${b.id},1)">↓</button>
+              <button class="gen-btn-sm gen-btn-sm--del" onclick="removeBlock(${b.id})">삭제</button>
+            </div>
+          </div>`;
+
+        if (b.type === 'image') {
+          const p = b.data.preview ? 'display:block;' : 'display:none;';
+          return hdr + `
+          <div class="gen-field">
+            <label class="gen-label">이미지 (sound 상세 기준 경로)</label>
+            <div class="gen-img-row">
+              <input class="gen-input" id="img-src-${b.id}" type="text" value="${esc(b.data.src)}"
+                placeholder="../images/sound/day_01/01.jpg"
+                oninput="syncBlock(${b.id},'src',this)" />
+              <button class="gen-browse-btn" onclick="pickImage(${b.id})">찾아보기</button>
+            </div>
+            <img class="gen-img-preview" id="img-prev-${b.id}" src="${esc(b.data.preview)}" style="${p}" />
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">캡션 (비워두면 표시 안 됨)</label>
+            <input class="gen-input" type="text" value="${esc(b.data.caption)}"
+              placeholder="파리, 2024년 봄"
+              oninput="syncBlock(${b.id},'caption',this)" />
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">alt 텍스트</label>
+            <input class="gen-input" type="text" value="${esc(b.data.alt)}"
+              oninput="syncBlock(${b.id},'alt',this)" />
+          </div>
+        </div>`;
+        } else if (b.type === 'audio') {
+          return hdr + `
+          <div class="gen-field">
+            <label class="gen-label">오디오 파일 (sound 상세 기준 경로)</label>
+            <div class="gen-img-row">
+              <input class="gen-input" id="audio-src-${b.id}" type="text" value="${esc(b.data.src||'')}"
+                placeholder="../audio/sound/artaud/Artaud_Riviere _F2.mp3"
+                oninput="syncBlock(${b.id},'src',this)" />
+              <button class="gen-browse-btn" onclick="pickAudio(${b.id})">찾아보기</button>
+            </div>
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">캡션 (비워두면 표시 안 됨)</label>
+            <input class="gen-input" type="text" value="${esc(b.data.caption||'')}"
+              placeholder="파리, 1923년"
+              oninput="syncBlock(${b.id},'caption',this)" />
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">설명 한 줄 (선택)</label>
+            <input class="gen-input" type="text" value="${esc(b.data.desc||'')}"
+              placeholder="자크 리비에르에게 보내는 편지 낭독"
+              oninput="syncBlock(${b.id},'desc',this)" />
+          </div>
+        </div>`;
+        } else {
+          const sizes = ['14','15','18','20','22','24','26','28','32'];
+          const sizeBtns = sizes.map(s => `<button class="gen-btn-sm${b.data.fontSize===s?' active':''}" style="${b.data.fontSize===s?'background:var(--text);color:white;border-color:var(--text);':''}" onclick="syncBlock(${b.id},'fontSize',{value:'${s}'});renderBlocks()">${s}px</button>`).join('');
+          return hdr + `
+          <div class="gen-field">
+            <label class="gen-label">폰트 크기</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">${sizeBtns}</div>
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">텍스트 (줄바꿈은 엔터)</label>
+            <textarea class="gen-textarea" oninput="syncBlock(${b.id},'text',this)">${esc(b.data.text)}</textarea>
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">캡션 (비워두면 표시 안 됨)</label>
+            <input class="gen-input" type="text" value="${esc(b.data.caption||'')}"
+              placeholder="파리, 2024년 봄"
+              oninput="syncBlock(${b.id},'caption',this)" />
+          </div>
+        </div>`;
+        }
+      }).join('');
+    }
+
+    // ── 이미지 피커 ──
+    const _fi = document.createElement('input');
+    _fi.type = 'file'; _fi.accept = 'image/*'; _fi.style.display = 'none';
+    document.body.appendChild(_fi);
+    let _pickerBlockId = null;
+
+    _fi.addEventListener('change', async () => {
+      if (!_fi.files[0]) return;
+      const file = _fi.files[0];
+      const b = blocks.find(b => b.id === Number(_pickerBlockId));
+      if (!b) return;
+
+      const url = URL.createObjectURL(file);
+      const prev = document.getElementById('img-prev-' + b.id);
+      if (prev) { prev.src = url; prev.style.display = 'block'; }
+      b.data.preview = url;
+
+      const slug = v('meta-filename').replace(/\.html$/i, '') || 'day';
+      const safeName = sanitizeImageFileName(file.name);
+      const path = '../images/sound/' + slug + '/' + safeName;
+      b.data.src = path;
+      const input = document.getElementById('img-src-' + b.id);
+      if (input) input.value = path;
+
+      if (dirHandle) {
+        try {
+          const imagesDir = await dirHandle.getDirectoryHandle('images', { create: true });
+          const soundImagesDir = await imagesDir.getDirectoryHandle('sound', { create: true });
+          const postDir   = await soundImagesDir.getDirectoryHandle(slug,     { create: true });
+          const fh = await postDir.getFileHandle(safeName, { create: true });
+          const w  = await fh.createWritable();
+          await w.write(await file.arrayBuffer());
+          await w.close();
+          log('이미지 복사됨: ' + path);
+        } catch(e) {
+          log('경로 설정됨: ' + path);
+        }
+      } else {
+        log('경로 설정됨: ' + path);
+      }
+      _fi.value = '';
+    });
+
+    function pickImage(blockId) {
+      _pickerBlockId = blockId;
+      _fi.click();
+    }
+
+    async function findRelativeFilePath(dir, targetName, prefix = '') {
+      for await (const [name, handle] of dir.entries()) {
+        const nextPrefix = prefix ? prefix + '/' + name : name;
+        if (handle.kind === 'file' && name === targetName) return nextPrefix;
+        if (handle.kind === 'directory') {
+          const found = await findRelativeFilePath(handle, targetName, nextPrefix);
+          if (found) return found;
+        }
+      }
+      return '';
+    }
+
+    // ── 오디오 피커 ──
+    const _fa = document.createElement('input');
+    _fa.type = 'file';
+    _fa.accept = 'audio/*,.mp3,.wav,.m4a,.aac,.ogg';
+    _fa.style.display = 'none';
+    document.body.appendChild(_fa);
+    let _pickerAudioBlockId = null;
+
+    _fa.addEventListener('change', async () => {
+      if (!_fa.files[0]) return;
+      const file = _fa.files[0];
+      const b = blocks.find(b => b.id === Number(_pickerAudioBlockId));
+      if (!b) return;
+
+      const slug = v('meta-filename').replace(/\.html$/i, '') || 'day';
+      const fileName = normalizeAudioFileName(file.name);
+      let path = '../audio/sound/' + slug + '/' + fileName;
+
+      if (dirHandle) {
+        try {
+          const audioDir = await dirHandle.getDirectoryHandle('audio');
+          const soundAudioDir = await audioDir.getDirectoryHandle('sound');
+          const foundPath = await findRelativeFilePath(soundAudioDir, file.name) || await findRelativeFilePath(soundAudioDir, fileName);
+          if (foundPath) path = '../audio/sound/' + foundPath;
+        } catch(e) {}
+      }
+
+      b.data.src = path;
+      const input = document.getElementById('audio-src-' + b.id);
+      if (input) input.value = path;
+      log('오디오 경로 설정됨: ' + path);
+      _fa.value = '';
+    });
+
+    function pickAudio(blockId) {
+      _pickerAudioBlockId = blockId;
+      _fa.click();
+    }
+
+    // ── 카드 이미지 피커 ──
+    const _fiCard = document.createElement('input');
+    _fiCard.type = 'file'; _fiCard.accept = 'image/*'; _fiCard.style.display = 'none';
+    document.body.appendChild(_fiCard);
+
+    _fiCard.addEventListener('change', async () => {
+      if (!_fiCard.files[0]) return;
+      const file = _fiCard.files[0];
+      const url = URL.createObjectURL(file);
+      document.getElementById('card-img-preview').src = url;
+      document.getElementById('card-img-preview').style.display = 'block';
+
+      const slugCard = v('meta-filename').replace(/\.html$/i, '') || 'day';
+      const safeName = sanitizeImageFileName(file.name);
+      const pathCard = 'images/sound/' + slugCard + '/' + safeName;
+      document.getElementById('card-img').value = pathCard;
+
+      if (dirHandle) {
+        try {
+          const imagesDir = await dirHandle.getDirectoryHandle('images', { create: true });
+          const soundImagesDir = await imagesDir.getDirectoryHandle('sound', { create: true });
+          const postDir   = await soundImagesDir.getDirectoryHandle(slugCard, { create: true });
+          const fh = await postDir.getFileHandle(safeName, { create: true });
+          const w  = await fh.createWritable();
+          await w.write(await file.arrayBuffer());
+          await w.close();
+          log('카드 이미지 복사됨: ' + pathCard);
+        } catch(e) {
+          log('카드 경로 설정됨: ' + pathCard);
+        }
+      } else {
+        log('카드 경로 설정됨: ' + pathCard);
+      }
+      _fiCard.value = '';
+    });
+
+    function pickCardImage() { _fiCard.click(); }
+    document.getElementById('card-img').addEventListener('input', () => syncPreviewFromInput('card-img', 'card-img-preview'));
+
+    // ── 폴더 선택 ──
+    async function selectFolder() {
+      try {
+        dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        document.getElementById('folder-status').textContent = dirHandle.name;
+        document.getElementById('folder-btn').classList.add('ready');
+        document.getElementById('folder-btn').textContent = '폴더 변경';
+        log('📁 ' + dirHandle.name + ' 폴더 선택됨');
+      } catch(e) {
+        if (e.name !== 'AbortError') log('<span class="err">폴더 선택 실패: ' + e.message + '</span>');
+      }
+    }
+
+    // ── 불러오기 ──
+    async function loadFile() {
+      let file;
+      try {
+        const [fh] = await window.showOpenFilePicker({
+          types: [{ description: 'HTML', accept: { 'text/html': ['.html'] } }]
+        });
+        file = await fh.getFile();
+      } catch(e) {
+        if (e.name !== 'AbortError') log('<span class="err">불러오기 실패: ' + e.message + '</span>');
+        return;
+      }
+
+      const html = await file.text();
+      const doc  = new DOMParser().parseFromString(html, 'text/html');
+
+      const sourceFilename = sourceFilenameFromDoc(doc, file.name === 'index.html' ? '' : file.name) || file.name;
+      document.getElementById('meta-filename').value = sourceFilename;
+      document.getElementById('meta-title').value    = doc.title.replace(' — 양자리출판사', '').trim();
+      const descMeta = doc.querySelector('meta[name="description"]');
+      document.getElementById('meta-desc').value     = descMeta ? (descMeta.content || '') : '';
+
+      blocks = []; nextId = 0;
+      doc.querySelectorAll('.day-slide').forEach(slide => {
+        if (slide.classList.contains('day-slide--text')) {
+          const body = slide.querySelector('.day-text-body');
+          // <br>을 줄바꿈으로
+          if (body) {
+            body.querySelectorAll('br').forEach(br => br.replaceWith('\n'));
+            const fsStyle = body.getAttribute('style') || '';
+            const fsM = fsStyle.match(/font-size:(\d+)px/);
+            blocks.push({ id: nextId++, type: 'text', data: { text: body.textContent.trim(), fontSize: fsM ? fsM[1] : '18', caption: slide.dataset.caption || '' }});
+          }
+        } else if (slide.classList.contains('day-slide--audio')) {
+          const source = slide.querySelector('audio source');
+          const desc = slide.querySelector('.day-audio-desc');
+          blocks.push({ id: nextId++, type: 'audio', data: {
+            src: source ? (source.getAttribute('src') || '').trim() : '',
+            caption: slide.dataset.caption || '',
+            desc: desc ? desc.textContent.trim() : ''
+          }});
+        } else {
+          const img = slide.querySelector('img');
+          blocks.push({ id: nextId++, type: 'image', data: {
+            src:     cleanImagePath(img ? (img.getAttribute('src') || '') : ''),
+            caption: slide.dataset.caption || '',
+            preview: toPreviewURL(img ? (img.getAttribute('src') || '') : ''),
+            alt:     img ? (img.getAttribute('alt') || '') : ''
+          }});
+        }
+      });
+
+      // 카드 정보 초기화
+      document.getElementById('card-img').value = '';
+      document.getElementById('card-img-preview').style.display = 'none';
+      document.getElementById('card-title').value = '';
+      document.getElementById('card-date').value = '';
+
+      // sound-data.js에서 카드 정보 복원
+      if (dirHandle) {
+        try {
+          const dfh = await (await dirHandle.getDirectoryHandle('data', { create: true })).getFileHandle('sound-data.js');
+          const df  = await dfh.getFile();
+          const dc  = await df.text();
+          const match = dc.match(/const SOUND_POSTS\s*=\s*\[([\s\S]*?)\];/);
+          if (match) {
+            let posts = [];
+            try { posts = eval('[' + match[1] + ']'); } catch(e) {}
+            const href = '/sound/' + slugFromFilename(sourceFilename) + '/';
+            const post = posts.find(p => p.href === href);
+            if (post) {
+              if (post.img) {
+                document.getElementById('card-img').value = cleanImagePath(post.img);
+                document.getElementById('card-img-preview').src = toPreviewURL(post.img);
+                document.getElementById('card-img-preview').style.display = 'block';
+              }
+              if (post.title) document.getElementById('card-title').value = post.title;
+              document.getElementById('card-author').value = post.author || '';
+              if (post.date) document.getElementById('card-date').value = post.date;
+            }
+          }
+        } catch(e) {}
+      }
+
+      syncPreviewFromInput('card-img', 'card-img-preview');
+      renderBlocks();
+      log('<span class="ok">✓ ' + file.name + ' 불러옴</span>');
+    }
+
+    // ── HTML 생성 ──
+    function generateHTML() {
+      const filename = v('meta-filename');
+      const title    = v('meta-title') || '제목 — 양자리출판사';
+      const desc     = v('meta-desc');
+
+      const slidesHtml = blocks.map(b => {
+        if (b.type === 'text') {
+          const lines = b.data.text.split('\n').map(l => esc(l)).join('<br>');
+          const captionAttr = b.data.caption ? ` data-caption="${esc(b.data.caption)}"` : '';
+          return `
+      <div class="day-slide day-slide--text"${captionAttr}>
+        <div class="day-text-inner">
+          <div class="day-text-body" style="font-size:${b.data.fontSize||'18'}px">${lines}</div>
+        </div>
+      </div>`;
+        } else if (b.type === 'audio') {
+          const src = (b.data.src || '').trim();
+          const captionAttr = b.data.caption ? ` data-caption="${esc(b.data.caption)}"` : '';
+          const descHtml = b.data.desc ? `\n          <div class="day-audio-desc">${esc(b.data.desc)}</div>` : '';
+          return `
+      <div class="day-slide day-slide--audio"${captionAttr}>
+        <div class="day-audio-wrap">
+          <audio controls preload="metadata">
+            <source src="${esc(src)}" type="audio/mpeg" />
+          </audio>${descHtml}
+        </div>
+      </div>`;
+        } else {
+          const src = cleanImagePath(b.data.src);
+          const captionAttr = b.data.caption ? ` data-caption="${esc(b.data.caption)}"` : '';
+          return `
+      <div class="day-slide"${captionAttr}>
+        <img src="${esc(src)}" alt="${esc(b.data.alt || '')}" decoding="async" />
+      </div>`;
+        }
+      }).join('\n');
+
+      return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script>document.documentElement.classList.add('fonts-loading');<\/script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="../">
+  <meta name="source-filename" content="${esc(filename)}" />
+  <meta name="description" content="${esc(desc)}" />
+  <title>${esc(title)}</title>
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="stylesheet" href="/assets/css/common.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2D1CQGLS07"><\/script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2D1CQGLS07');
+  <\/script>
+  <style>
+
+    html, body { min-height: 100%; }
+    body { display: flex; flex-direction: column; min-height: 100dvh; }
+
+    .day-wrap {
+      flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0;
+    }
+
+    .day-slide-area {
+      flex: 1; position: relative; overflow: hidden;
+      cursor: pointer; min-height: 0;
+    }
+
+    .day-slide {
+      position: absolute;
+      top: calc(18px * 1.15 + 8mm); left: 0; right: 0; bottom: calc(18px * 1.15 + 8mm);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+    }
+
+    .day-slide.is-active { opacity: 1; pointer-events: auto; }
+
+    .day-slide img {
+      max-width: 100%; max-height: 100%;
+      width: auto; height: auto; object-fit: contain;
+      display: block; user-select: none; -webkit-user-drag: none;
+      padding: 0 4mm; box-sizing: border-box;
+    }
+
+    .day-slide--text { padding: 0 4mm; box-sizing: border-box; }
+
+    .day-slide--text .day-text-inner { width: 100%; max-width: 680px; text-align: center; }
+
+    .day-slide--text .day-text-body {
+      font-family: var(--ui-font);
+      font-size: 18px; font-weight: 400;
+      line-height: 1.7; letter-spacing: -0.01em; color: var(--text);
+    }
+
+    .day-slide--audio { padding: 0 4mm; box-sizing: border-box; }
+
+    .day-audio-wrap {
+      width: min(100%, 560px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 20px;
+    }
+
+    .day-audio-wrap audio {
+      width: min(100%, 420px);
+      display: block;
+    }
+
+    .day-audio-desc {
+      max-width: 420px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--rule);
+      text-align: center;
+      font-family: var(--ui-font);
+      letter-spacing: -0.01em;
+    }
+
+    .day-caption-wrap { flex-shrink: 0; padding: 8px 4mm 10px 4mm; }
+
+    .day-caption {
+      font-size: 15px; line-height: 1.6; color: var(--text);
+      font-family: var(--ui-font); min-height: 1.6em; text-align: center;
+    }
+
+    .day-caption.is-hidden { visibility: hidden; }
+
+    .day-back {
+      position: absolute;
+      top: 0; left: 0;
+      height: calc(18px * 1.15 + 8mm);
+      display: flex;
+      align-items: center;
+      padding: 0 4mm;
+      font-size: 18px;
+      color: var(--text);
+      text-decoration: none;
+      z-index: 10;
+      font-family: var(--ui-font);
+      letter-spacing: -0.01em;
+    }
+    .day-back:hover { opacity: 0.5; }
+
+    .day-counter {
+      position: absolute;
+      top: 0; right: 0;
+      height: calc(18px * 1.15 + 8mm);
+      display: flex;
+      align-items: center;
+      padding: 0 4mm;
+      font-size: 15px;
+      color: var(--text);
+      font-family: var(--ui-font);
+      letter-spacing: -0.01em;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    @media (max-width: 820px) {
+      .day-caption { font-size: 14px; }
+      .day-slide--text .day-text-inner { text-align: center; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <header class="header" style="position: relative;">
+    <div class="logo"><a href="/">양자리출판사</a></div>
+    <nav class="nav" aria-label="주요 메뉴">
+      <a href="/catalog/">카탈로그</a><span class="spacer">　　</span>
+      <a href="/text/">텍스트</a><span class="spacer">　　</span>
+      <a href="/sound/" class="active">사운드</a><span class="spacer">　　</span>
+      <a href="/scrap/">스크랩</a>
+      <span class="nav-icons">
+        <button aria-label="검색" id="search-btn">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.2"/>
+            <line x1="11.5" y1="11.5" x2="16.5" y2="16.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button aria-label="메뉴" id="menu-btn">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="1" x2="18" y2="1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="0" y1="7" x2="18" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="0" y1="13" x2="18" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </span>
+    </nav>
+    <div class="header-search-overlay" id="header-search-overlay">
+      <input type="text" placeholder="검색" id="search-input" />
+      <button class="header-search-close" id="search-close">닫기</button>
+    </div>
+  </header>
+
+  <!-- 메뉴 오버레이 -->
+  <div class="menu-overlay" id="menu-overlay">
+    <div class="menu-overlay-top">
+      <div class="menu-overlay-spacer">&nbsp;</div>
+      <div class="menu-overlay-nav">
+        <span class="menu-overlay-close">
+          <span style="display:inline-flex;width:18px;height:18px;"></span>
+          <button id="menu-close" aria-label="메뉴 닫기">
+            <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" y1="1" x2="18" y2="1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              <line x1="0" y1="7" x2="18" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              <line x1="0" y1="13" x2="18" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </span>
+      </div>
+    </div>
+    <div class="menu-overlay-body">
+      <div class="menu-overlay-links">
+        <a href="/catalog/">카탈로그</a>
+        <a href="/text/">텍스트</a>
+        <a href="/sound/">사운드</a>
+        <a href="/scrap/">스크랩</a>
+        <span class="menu-overlay-spacer"></span>
+        <span>양자리출판사</span>
+        <span style="padding-left:0.65em;">(03127)</span>
+        <span style="padding-left:0.65em;">서울시 종로구</span>
+        <span style="padding-left:0.65em;">대학로 47</span>
+        <span class="menu-overlay-spacer"></span>
+        <a href="mailto:mail@yangjari-editions.com">메일</a>
+        <a href="https://instagram.com/yangjari_editions" target="_blank">인스타그램</a>
+        <span class="menu-newsletter-wrap" id="menu-newsletter-wrap">
+          <button class="menu-newsletter-btn" id="menu-newsletter-btn" onclick="openNewsletter()">뉴스레터</button>
+          <div class="menu-newsletter-form" id="menu-newsletter-form" style="display:none;">
+            <input class="menu-newsletter-input" id="newsletter-name" type="text" placeholder="이름" autocomplete="off" />
+            <input class="menu-newsletter-input" id="newsletter-email" type="email" placeholder="이메일" autocomplete="off" />
+            <button class="menu-newsletter-submit" id="newsletter-submit" onclick="submitNewsletter()">확인</button>
+          </div>
+          <span class="menu-newsletter-done" id="newsletter-done" style="display:none;">완료</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <main class="day-wrap">
+
+    <div class="day-slide-area" id="day-slide-area">
+      <a class="day-back" href="../sound/">←</a>
+      <div class="day-counter" id="day-counter">1 / \${slides.length}</div>
+${slidesHtml}
+    </div>
+
+    <div class="day-caption-wrap">
+      <div class="day-caption" id="day-caption"></div>
+    </div>
+
+  </main>
+
+  <script>
+
+    const slides    = Array.from(document.querySelectorAll('.day-slide'));
+    const captionEl = document.getElementById('day-caption');
+    const slideArea = document.getElementById('day-slide-area');
+    const counterEl = document.getElementById('day-counter');
+    let idx = 0;
+
+    function update() {
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === idx));
+      const cur = slides[idx];
+      const isText = cur.classList.contains('day-slide--text');
+      const cap = cur.dataset.caption || '';
+      if (cap) {
+        captionEl.textContent = cap;
+        captionEl.classList.remove('is-hidden');
+      } else {
+        captionEl.textContent = '';
+        captionEl.classList.add('is-hidden');
+      }
+      counterEl.textContent = (idx + 1) + ' / ' + slides.length;
+    }
+
+    function goNext() { idx = (idx + 1) % slides.length; update(); }
+    function goPrev() { idx = (idx - 1 + slides.length) % slides.length; update(); }
+
+    slideArea.addEventListener('click', goNext);
+
+    document.querySelectorAll('.day-audio-wrap, .day-audio-wrap audio').forEach(el => {
+      ['click', 'touchstart', 'touchend'].forEach(type => {
+        el.addEventListener(type, e => {
+          e.stopPropagation();
+        }, { passive: true });
+      });
+    });
+
+    let tx = 0;
+    slideArea.addEventListener('touchstart', e => { tx = e.changedTouches[0].clientX; }, { passive: true });
+    slideArea.addEventListener('touchend', e => {
+      const d = tx - e.changedTouches[0].clientX;
+      if (Math.abs(d) > 40) { d > 0 ? goNext() : goPrev(); }
+    }, { passive: true });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') goNext();
+      if (e.key === 'ArrowLeft')  goPrev();
+    });
+
+    update();
+
+    const searchBtn     = document.getElementById('search-btn');
+    const searchClose   = document.getElementById('search-close');
+    const searchOverlay = document.getElementById('header-search-overlay');
+    const searchInput   = document.getElementById('search-input');
+    searchBtn.addEventListener('click', () => { searchOverlay.classList.add('is-open'); searchInput.focus(); });
+    searchClose.addEventListener('click', () => { searchOverlay.classList.remove('is-open'); });
+
+    const menuBtn     = document.getElementById('menu-btn');
+    const menuClose   = document.getElementById('menu-close');
+    const menuOverlay = document.getElementById('menu-overlay');
+    menuBtn.addEventListener('click', () => { document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; menuOverlay.classList.add('is-open'); });
+    menuClose.addEventListener('click', () => { document.documentElement.style.overflow = ''; document.body.style.overflow = ''; menuOverlay.classList.remove('is-open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.documentElement.style.overflow = ''; document.body.style.overflow = ''; menuOverlay.classList.remove('is-open'); } });
+
+  <\/script>
+
+  <script>
+    (function () {
+      const html = document.documentElement; let revealed = false;
+      function reveal() { if (revealed) return; revealed = true; html.classList.remove('fonts-loading'); html.classList.add('fonts-ready'); }
+      const t = setTimeout(reveal, 5000);
+      Promise.all([document.fonts.load('400 1em "GothicA1"'), document.fonts.ready])
+        .then(() => { clearTimeout(t); requestAnimationFrame(reveal); }).catch(() => { clearTimeout(t); reveal(); });
+    })();
+  <\/script>
+
+  <script id="site-menu-script">
+    (function () {
+      const NEWSLETTER_URL = 'https://script.google.com/a/macros/yangjari-editions.com/s/AKfycbye3PjtFxT5sqjFrRoWQkpYe0nVOg1dDmFZ_YD1Q7uH6bdsnCPsmkDwTZ6nMQVRkJRIyQ/exec';
+      const html = document.documentElement;
+      const body = document.body;
+      const searchBtn = document.getElementById('search-btn');
+      const searchOverlay = document.getElementById('header-search-overlay');
+      const searchInput = document.getElementById('search-input');
+      const searchClose = document.getElementById('search-close');
+      const menuBtn = document.getElementById('menu-btn');
+      const menuClose = document.getElementById('menu-close');
+      const menuOverlay = document.getElementById('menu-overlay');
+      function closeSearch() { if (!searchOverlay || !searchInput) return; searchOverlay.classList.remove('is-open'); searchInput.value = ''; }
+      function closeMenu() { html.style.overflow = ''; body.style.overflow = ''; if (menuOverlay) menuOverlay.classList.remove('is-open'); }
+      if (searchBtn && searchOverlay && searchInput) {
+        searchBtn.addEventListener('click', function () { searchOverlay.classList.add('is-open'); searchInput.focus(); });
+        searchInput.addEventListener('keydown', function (e) { if (e.key === 'Enter' && searchInput.value.trim()) window.location.href = '/search/?q=' + encodeURIComponent(searchInput.value.trim()); });
+      }
+      if (searchClose) searchClose.addEventListener('click', closeSearch);
+      if (menuBtn && menuOverlay) menuBtn.addEventListener('click', function () { html.style.overflow = 'hidden'; body.style.overflow = 'hidden'; menuOverlay.classList.add('is-open'); });
+      if (menuClose) menuClose.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { closeSearch(); closeMenu(); }
+        if (e.key === 'Enter') {
+          const nameEl = document.getElementById('newsletter-name');
+          const emailEl = document.getElementById('newsletter-email');
+          if (document.activeElement === nameEl) { emailEl.focus(); e.preventDefault(); }
+          else if (document.activeElement === emailEl) { window.submitNewsletter(); e.preventDefault(); }
+        }
+      });
+      window.openNewsletter = function () {
+        const btn = document.getElementById('menu-newsletter-btn');
+        const form = document.getElementById('menu-newsletter-form');
+        const name = document.getElementById('newsletter-name');
+        if (btn) btn.style.display = 'none';
+        if (form) form.style.display = 'flex';
+        if (name) name.focus();
+      };
+      window.submitNewsletter = function () {
+        const nameEl = document.getElementById('newsletter-name');
+        const emailEl = document.getElementById('newsletter-email');
+        const submitBtn = document.getElementById('newsletter-submit');
+        const form = document.getElementById('menu-newsletter-form');
+        const done = document.getElementById('newsletter-done');
+        const name = nameEl ? nameEl.value.trim() : '';
+        const email = emailEl ? emailEl.value.trim() : '';
+        if (!name || !email || !submitBtn) return;
+        submitBtn.textContent = '전송 중...';
+        submitBtn.style.pointerEvents = 'none';
+        fetch(NEWSLETTER_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ name, email }) }).catch(function () {});
+        setTimeout(function () { if (form) form.style.display = 'none'; if (done) done.style.display = 'block'; }, 1000);
+      };
+    })();
+  <\/script>
+</body>
+</html>`;
+    }
+
+    // ── 삭제하기 ──
+    async function deletePost() {
+      if (!dirHandle) { log('<span class="err">먼저 프로젝트 폴더를 선택해주세요.</span>'); return; }
+      const filename = v('meta-filename');
+      if (!filename) { log('<span class="err">파일명을 입력해주세요.</span>'); return; }
+      if (!confirm(filename + ' 카드를 sound/index.html에서 삭제할까요?')) return;
+
+      log('삭제 중...');
+      try {
+        const soundDir = await dirHandle.getDirectoryHandle('sound');
+        const fh = await soundDir.getFileHandle('index.html');
+        const file = await fh.getFile();
+        let content = await file.text();
+        const startTag = '<a class="sound-card" href="/sound/' + slugFromFilename(filename) + '/">';
+        const endTag = '</a>';
+        while (content.includes(startTag)) {
+          const s = content.indexOf(startTag);
+          const e = content.indexOf(endTag, s) + endTag.length;
+          if (e < endTag.length) break;
+          content = content.slice(0, s).trimEnd() + '\n' + content.slice(e);
+        }
+        const w = await fh.createWritable();
+        await w.write(content);
+        await w.close();
+        log('<span class="ok">✓ sound/index.html 카드 삭제됨</span>');
+
+        // sound-data.js에서도 삭제
+        try {
+          const dfh = await (await dirHandle.getDirectoryHandle('data', { create: true })).getFileHandle('sound-data.js');
+          const dfile = await dfh.getFile();
+          const dcontent = await dfile.text();
+          const match = dcontent.match(/const SOUND_POSTS\s*=\s*\[([\s\S]*?)\];/);
+          if (match) {
+            let posts = [];
+            try { posts = eval('[' + match[1] + ']'); } catch(e) {}
+            posts = posts.filter(p => p.href !== '/sound/' + slugFromFilename(filename) + '/');
+            const postsStr = posts.map(p =>
+              `  {\n    href:   "${p.href}",\n    img:    "${p.img}",\n    title:  "${p.title}",\n    author: "${p.author || ''}",\n    date:   "${p.date}"${typeof p.hidden === 'boolean' ? `,\n    hidden: ${p.hidden}` : ''}\n  }`
+            ).join(',\n');
+            const newDContent = dcontent.replace(
+              /const SOUND_POSTS\s*=\s*\[[\s\S]*?\];/,
+              `const SOUND_POSTS = [\n${postsStr}\n];`
+            );
+            const dw = await dfh.createWritable();
+            await dw.write(newDContent);
+            await dw.close();
+          }
+        } catch(e) {}
+
+        // index.html에서도 삭제
+        try {
+          const ifh = await dirHandle.getFileHandle('index.html');
+          const ifile = await ifh.getFile();
+          let icontent = await ifile.text();
+          const startTag2 = '<a class="slide-card-link" href="/sound/' + slugFromFilename(filename) + '/">';
+          const outerStart2 = '<div class="slide-card">';
+          const outerEnd2 = '</div>';
+          while (icontent.includes(startTag2)) {
+            const inner2 = icontent.indexOf(startTag2);
+            const s2 = icontent.lastIndexOf(outerStart2, inner2);
+            const e2 = icontent.indexOf(outerEnd2, inner2) + outerEnd2.length;
+            if (s2 < 0 || e2 < outerEnd2.length) break;
+            icontent = icontent.slice(0, s2).trimEnd() + '\n' + icontent.slice(e2);
+          }
+          const iw = await ifh.createWritable();
+          await iw.write(icontent);
+          await iw.close();
+          log('<span class="ok">✓ index.html 카드 삭제됨</span>');
+        } catch(e) {}
+
+        // 파일도 삭제
+        try {
+          const soundDir = await dirHandle.getDirectoryHandle('sound');
+          const slug = slugFromFilename(filename);
+          await soundDir.removeEntry(slug, { recursive: true });
+          log('<span class="ok">✓ sound/' + slug + '/index.html 파일 삭제됨 🎉</span>');
+        } catch(e) {
+          log('<span class="ok">✓ 카드 삭제됨 (파일은 수동으로 삭제해주세요)</span>');
+        }
+      } catch(e) {
+        log('<span class="err">오류: ' + e.message + '</span>');
+      }
+    }
+
+    // ── index.html 슬라이드 카드 HTML 생성 ──
+    function generateSlideCardHTML() {
+      const filename = v('meta-filename');
+      const title    = v('card-title') || v('meta-title') || '';
+      const author   = v('card-author');
+      const date     = v('card-date');
+      const img      = cleanImagePath(v('card-img'));
+      return `
+      <div class="slide-card">
+        <a class="slide-card-link" href="/sound/${slugFromFilename(filename)}/">
+          <div class="slide-card-img" data-src="${esc(img)}"></div>
+          <h2 class="slide-card-title">${esc(title)}</h2>
+          ${author ? `<div class="slide-card-author">${esc(author)}</div>` : ''}
+          <div class="slide-card-date">${esc(date)}</div>
+        </a>
+      </div>`;
+    }
+
+    // ── 카드 HTML 생성 ──
+    function generateCardHTML() {
+      const filename = v('meta-filename');
+      const title    = v('card-title') || v('meta-title') || '';
+      const author   = v('card-author');
+      const date     = v('card-date');
+      const img      = cleanImagePath(v('card-img'));
+      return `
+      <a class="news-card" href="/sound/${slugFromFilename(filename)}/">
+        <div class="news-card-img">
+          <img src="${img}" alt="" decoding="async" />
+        </div>
+        <div class="news-card-title">${esc(title)}</div>
+        ${author ? `<div class="news-card-author">${esc(author)}</div>` : ''}
+        <div class="news-card-date">${esc(date)}</div>
+      </a>`;
+    }
+
+    // ── index.html 업데이트 ──
+    async function updateIndexHTML() {
+      try {
+        const fh = await dirHandle.getFileHandle('index.html');
+        const file = await fh.getFile();
+        let content = await file.text();
+        const postFilename = v('meta-filename');
+
+        // 기존 슬라이드 카드 제거
+        const startTag = '<a class="slide-card-link" href="/sound/' + slugFromFilename(postFilename) + '/">';
+        const outerStart = '<div class="slide-card">';
+        const outerEnd = '</div>';
+        while (content.includes(startTag)) {
+          const inner = content.indexOf(startTag);
+          const s = content.lastIndexOf(outerStart, inner);
+          const e = content.indexOf(outerEnd, inner) + outerEnd.length;
+          if (s < 0 || e < outerEnd.length) break;
+          content = content.slice(0, s).trimEnd() + '\n' + content.slice(e);
+        }
+
+        // 맨 앞에 삽입
+        const marker = '<div class="slider-track" id="slider">';
+        const idx = content.indexOf(marker);
+        if (idx === -1) return;
+        const insertAt = idx + marker.length + 1;
+        content = content.slice(0, insertAt) + generateSlideCardHTML() + '\n' + content.slice(insertAt);
+
+        const w = await fh.createWritable();
+        await w.write(content);
+        await w.close();
+        log('<span class="ok">✓ index.html 업데이트됨</span>');
+      } catch(e) {
+        log('<span class="err">index.html 업데이트 실패: ' + e.message + '</span>');
+      }
+    }
+
+    // ── sound/index.html 업데이트 ──
+    async function updateNewsHTML() {
+      const soundDir = await dirHandle.getDirectoryHandle('sound');
+        const fh = await soundDir.getFileHandle('index.html');
+      const file = await fh.getFile();
+      let content = await file.text();
+      const postFilename = v('meta-filename');
+
+      // 기존 카드 제거
+      const startTag = '<a class="sound-card" href="/sound/' + slugFromFilename(postFilename) + '/">';
+      const endTag = '</a>';
+      while (content.includes(startTag)) {
+        const s = content.indexOf(startTag);
+        const e = content.indexOf(endTag, s) + endTag.length;
+        if (e < endTag.length) break;
+        content = content.slice(0, s).trimEnd() + '\n' + content.slice(e);
+      }
+
+      // 맨 앞에 삽입
+      const marker = '<div class="sound-grid">';
+      const idx = content.indexOf(marker);
+      if (idx === -1) throw new Error('sound/index.html에서 sound-grid 섹션을 찾을 수 없음');
+      const insertAt = idx + marker.length + 1;
+      content = content.slice(0, insertAt) + generateCardHTML() + '\n' + content.slice(insertAt);
+
+      const w = await fh.createWritable();
+      await w.write(content);
+      await w.close();
+    }
+
+    // ── sound-data.js 업데이트 ──
+    async function updateSoundDataJS() {
+      const fh = await (await dirHandle.getDirectoryHandle('data', { create: true })).getFileHandle('sound-data.js');
+      const file = await fh.getFile();
+      const content = await file.text();
+
+      const filename = v('meta-filename');
+      const title    = v('card-title') || v('meta-title') || '';
+      const author   = v('card-author');
+      const date     = v('card-date');
+      const img      = cleanImagePath(v('card-img'));
+      const href     = '/sound/' + slugFromFilename(filename) + '/';
+
+      // 기존 SOUND_POSTS 배열 파싱
+      const match = content.match(/const SOUND_POSTS\s*=\s*\[([\s\S]*?)\];/);
+      let posts = [];
+      if (match) {
+        try { posts = eval('[' + match[1] + ']'); } catch(e) { posts = []; }
+      }
+
+      // 같은 href 있으면 교체, 없으면 맨 앞에 추가
+      const existing = posts.findIndex(p => p.href === href);
+      const newPost = { href, img, title, author, date };
+      if (existing >= 0 && typeof posts[existing].hidden === 'boolean') {
+        newPost.hidden = posts[existing].hidden;
+      }
+      if (existing >= 0) posts[existing] = newPost;
+      else posts.unshift(newPost);
+
+      const postsStr = posts.map(p =>
+        `  {\n    href:   "${p.href}",\n    img:    "${p.img}",\n    title:  "${p.title}",\n    author: "${p.author || ''}",\n    date:   "${p.date}"${typeof p.hidden === 'boolean' ? `,\n    hidden: ${p.hidden}` : ''}\n  }`
+      ).join(',\n');
+
+      const newContent = content.replace(
+        /const SOUND_POSTS\s*=\s*\[[\s\S]*?\];/,
+        `const SOUND_POSTS = [\n${postsStr}\n];`
+      );
+
+      const w = await fh.createWritable();
+      await w.write(newContent);
+      await w.close();
+    }
+
+    // ── 저장 ──
+    async function saveFile() {
+      if (!dirHandle) { log('<span class="err">먼저 프로젝트 폴더를 선택해주세요.</span>'); return; }
+      const filename = v('meta-filename');
+      if (!filename) { log('<span class="err">파일명을 입력해주세요.</span>'); return; }
+
+      log('저장 중...');
+      try {
+        const slug = slugFromFilename(filename);
+        const soundDir = await dirHandle.getDirectoryHandle('sound', { create: true });
+        const postDir = await soundDir.getDirectoryHandle(slug, { create: true });
+        const fh = await postDir.getFileHandle('index.html', { create: true });
+        const w  = await fh.createWritable();
+        await w.write(generateHTML());
+        await w.close();
+        log('<span class="ok">✓ sound/' + slug + '/index.html 저장됨</span>');
+
+        // sound-data.js 업데이트
+        await updateSoundDataJS();
+        log('<span class="ok">✓ sound-data.js 업데이트됨</span>');
+
+        log('<span class="ok">✓ 완료 🎉</span>');
+      } catch(e) {
+        log('<span class="err">오류: ' + e.message + '</span>');
+        console.error(e);
+      }
+    }
+
+    function previewGenerate() {
+      document.getElementById('output-code').value = generateHTML();
+    }
+
+    function copyCode() {
+      const ta = document.getElementById('output-code');
+      if (!ta.value) return;
+      navigator.clipboard.writeText(ta.value).catch(() => { ta.select(); document.execCommand('copy'); });
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = '복사됨 ✓';
+      setTimeout(() => { btn.textContent = '복사'; }, 2000);
+    }
+
+    // 기본 슬라이드 1개
+    addBlock('image');
+
+  </script>
+
+  <script>
+    (function () {
+      const html = document.documentElement; let revealed = false;
+      function reveal() { if (revealed) return; revealed = true; html.classList.remove('fonts-loading'); html.classList.add('fonts-ready'); }
+      const t = setTimeout(reveal, 3000);
+      Promise.all([document.fonts.load('400 1em "GothicA1"'), document.fonts.ready])
+        .then(() => { clearTimeout(t); requestAnimationFrame(reveal); }).catch(() => { clearTimeout(t); reveal(); });
+    })();
+  </script>
+
+</body>
+</html>
