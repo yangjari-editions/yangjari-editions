@@ -10,6 +10,16 @@
 
 const TEXT_POSTS = [
   {
+    href:       "/text/cioran_fanatisme/",
+    img:        "images/text/cioran_fanatisme/cioran_front.webp",
+    alt:        "— 광신주의의 계보",
+    title:      "— 광신주의의 계보",
+    author:     "에밀 시오랑",
+    translator: "표은선 번역",
+    date:       "2026년 10월 3일",
+    desc:       "『해체의 개설(Précis de décomposition)』, 1949년"
+  },
+  {
     href:       "/text/celine_rousseaux/",
     img:        "images/text/celine_rousseaux/celine_rousseaux_01.jpg",
     alt:        "— 앙드레 루소에게 보내는 편지",
