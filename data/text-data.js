@@ -10,6 +10,16 @@
 
 const TEXT_POSTS = [
   {
+    href:       "/text/hm_writing/",
+    img:        "images/text/hm_writing/hm_00.jpg",
+    alt:        "— 글쓰기에 관한 성찰",
+    title:      "— 글쓰기에 관한 성찰",
+    author:     "헨리 밀러",
+    translator: "이옥준 번역",
+    date:       "2026년 10월 15일",
+    desc:       "『글쓰기에 관한 성찰(Reflections on Writing)』, 1941년"
+  },
+  {
     href:       "/text/cioran_fanatisme/",
     img:        "images/text/cioran_fanatisme/cioran_front.webp",
     alt:        "— 광신주의의 계보",
