@@ -7,7 +7,7 @@ const JOURNAL_POSTS = [
     "author": "신승민",
     "img": "",
     "desc": "",
-    "hidden": true
+    "hidden": false
   },
   {
     "href": "/journal/261001/",
